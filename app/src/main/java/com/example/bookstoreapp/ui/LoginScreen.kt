@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.firebase.Firebase
+import com.google.firebase.auth.EmailAuthCredential
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
@@ -31,7 +33,7 @@ fun LoginScreen(){
     val passwordState = remember {
         mutableStateOf("")
     }
-
+    Log.d("MyLog", "${auth.currentUser?.email}")
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,9 +52,29 @@ fun LoginScreen(){
         )
 
         Button(onClick = {
+            signIn(auth = auth, email = emailState.value, password = passwordState.value)
+        }) {
+            Text(text = "Sign In")
+        }
+
+        Button(onClick = {
             signUp(auth = auth, email = emailState.value, password = passwordState.value)
         }) {
             Text(text = "Sign Up")
+        }
+
+
+        Button(onClick = {
+            signOut(auth = auth)
+        }) {
+            Text(text = "Sign Out")
+        }
+
+
+        Button(onClick = {
+            DeleteAccount(auth = auth, email = emailState.value, password = passwordState.value)
+        }) {
+            Text(text = "Delete Account")
         }
 
     }
@@ -68,4 +90,43 @@ private fun signUp(auth: FirebaseAuth, email: String, password: String){
                 Log.d("MyLog", "Sign Up failure")
             }
         }
+}
+
+
+private fun signIn(auth: FirebaseAuth, email: String, password: String){
+    auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener {
+            if(it.isSuccessful){
+                Log.d("MyLog", "Sign Up seccessfull")
+            }
+            else{
+                Log.d("MyLog", "Sign Up failure")
+            }
+        }
+}
+
+private fun signOut(auth: FirebaseAuth){
+    auth.signOut()
+}
+
+
+
+private fun DeleteAccount(auth: FirebaseAuth, email: String, password: String){
+
+    val credential = EmailAuthProvider.getCredential(email, password)
+    auth.currentUser?.reauthenticate(credential)?.addOnCompleteListener {
+        if(it.isSuccessful){
+            auth.currentUser?.delete()?.addOnCompleteListener {
+                if(it.isSuccessful){
+                    Log.d("MyLog", "Account was deleted")
+                }
+                else{
+                    Log.d("MyLog", "Sign In failure")
+                }
+            }
+        }
+        else{
+            Log.d("MyLog", "Sign In failure")
+        }
+    }
 }
