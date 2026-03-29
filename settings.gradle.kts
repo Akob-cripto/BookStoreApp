@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "BookStoreApp"
 include(":app")
+include(":domain")

@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 gmsVersion = "4.4.4"
 bomVersion = "33.6.0"
 firebaseFirestoreKtxVersion = "26.1.2"
+jetbrainsKotlinJvm = "2.0.21"
 
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "bomVersion" }
@@ -38,3 +39,4 @@ gms = { id = "com.google.gms.google-services", version.ref = "gmsVersion" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
