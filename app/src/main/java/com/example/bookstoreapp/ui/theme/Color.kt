@@ -13,3 +13,7 @@ val Pink40 = Color(0xFF7D5260)
 val BoxFilterColor = Color(0x31008BF5)
 
 val ButtonColor = Color(0x9C088BF5)
+
+val DarkBlue = Color(0xFF1c384c)
+
+val GrayLight = Color(0x32FFFFFF)

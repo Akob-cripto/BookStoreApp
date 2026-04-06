@@ -1,6 +1,5 @@
 package com.example.bookstoreapp.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,13 +26,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
-import com.google.firebase.Firebase
-import com.google.firebase.auth.EmailAuthCredential
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun LoginScreen() {
@@ -47,6 +45,12 @@ fun LoginScreen() {
     val passwordState = remember {
         mutableStateOf("")
     }
+
+    val firebaseAuth = FirebaseAuth.getInstance()
+
+    val viewModel =  viewModel<MainViewModel>()
+
+    val coroutineScope = rememberCoroutineScope()
 
     Image(
         painter = painterResource(R.drawable.bg_bookstore_login),
@@ -73,7 +77,7 @@ fun LoginScreen() {
         Image(painter = painterResource(R.drawable.logo),
             contentDescription = "Logo",
             modifier = Modifier
-                .size(200.dp)  // Устанавливаем размер изображения
+                .size(200.dp)
                 .clip(RoundedCornerShape(50.dp))
         )
 
@@ -106,56 +110,19 @@ fun LoginScreen() {
         }
 
 
-        LoginButton(text = "Sign In") { }
-
-
-        LoginButton(text = "Sign Up") { }
-
-    }
-}
-
-private fun signUp(auth: FirebaseAuth, email: String, password: String) {
-    auth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.d("MyLog", "Sign Up seccessfull")
-            } else {
-                Log.d("MyLog", "Sign Up failure")
+        LoginButton(text = "Sign In") {
+            coroutineScope.launch{
+                viewModel.get(email = emailState.value, password = passwordState.value)
             }
         }
-}
 
 
-private fun signIn(auth: FirebaseAuth, email: String, password: String) {
-    auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.d("MyLog", "Sign Up seccessfull")
-            } else {
-                Log.d("MyLog", "Sign Up failure")
+        LoginButton(text = "Sign Up") {
+            coroutineScope.launch{
+                viewModel.save(email = emailState.value, password = passwordState.value)
             }
+
         }
-}
 
-private fun signOut(auth: FirebaseAuth) {
-    auth.signOut()
-}
-
-
-private fun DeleteAccount(auth: FirebaseAuth, email: String, password: String) {
-
-    val credential = EmailAuthProvider.getCredential(email, password)
-    auth.currentUser?.reauthenticate(credential)?.addOnCompleteListener {
-        if (it.isSuccessful) {
-            auth.currentUser?.delete()?.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Log.d("MyLog", "Account was deleted")
-                } else {
-                    Log.d("MyLog", "Sign In failure")
-                }
-            }
-        } else {
-            Log.d("MyLog", "Sign In failure")
-        }
     }
 }

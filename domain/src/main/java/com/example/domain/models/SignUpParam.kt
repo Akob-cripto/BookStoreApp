@@ -1,4 +1,6 @@
 package com.example.domain.models
 
-class SignUpParam(val user: User) {
-}
+data class SignUpParam(
+    val email: String,
+    val password: String
+)
