@@ -40,6 +40,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":data"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
@@ -65,8 +66,20 @@ dependencies {
 
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
+
+    implementation(libs.androidx.compose.runtime.livedata)
+
+    implementation(libs.androidx.navigation)
 }

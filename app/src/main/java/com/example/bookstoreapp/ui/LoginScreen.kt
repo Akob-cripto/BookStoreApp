@@ -1,5 +1,7 @@
 package com.example.bookstoreapp.ui
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,16 +31,23 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
+import com.example.bookstoreapp.ui.main_screen.MainScreen
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
+import com.example.domain.validation.SignInResult
+import com.example.domain.validation.SignUpResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
+
+
 
 
     val emailState = remember {
@@ -46,9 +58,39 @@ fun LoginScreen() {
         mutableStateOf("")
     }
 
-    val firebaseAuth = FirebaseAuth.getInstance()
 
-    val viewModel =  viewModel<MainViewModel>()
+    val vm: MainViewModel = koinViewModel()
+
+
+    val signInResult by vm.signInResultLiveData.observeAsState()
+    val signUpResult by vm.signUpResultLiveData.observeAsState()
+
+    LaunchedEffect(signInResult) {
+        Log.e("MyLog", "signInResult: $signInResult")
+        when (val result = signInResult) {
+            SignInResult.Success -> {
+                navController.navigate("main")
+            }
+            else -> {
+                Log.e("MyLog", "signInResult: $signInResult")
+            }
+        }
+    }
+
+    LaunchedEffect(signUpResult) {
+        Log.e("MyLog", "signUpResult: $signInResult")
+        when (val result = signUpResult) {
+            SignUpResult.Success -> {
+                navController.navigate("main")
+            }
+            else -> {
+                Log.e("MyLog", "signUpResult: $signUpResult")
+
+            }
+        }
+    }
+
+
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -112,16 +154,15 @@ fun LoginScreen() {
 
         LoginButton(text = "Sign In") {
             coroutineScope.launch{
-                viewModel.get(email = emailState.value, password = passwordState.value)
+                vm.get(email = emailState.value, password = passwordState.value)
             }
         }
 
 
         LoginButton(text = "Sign Up") {
             coroutineScope.launch{
-                viewModel.save(email = emailState.value, password = passwordState.value)
+                vm.save(email = emailState.value, password = passwordState.value)
             }
-
         }
 
     }

@@ -33,11 +33,16 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    implementation(libs.koin.core)
 }

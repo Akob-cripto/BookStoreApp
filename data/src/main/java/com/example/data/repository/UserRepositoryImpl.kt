@@ -1,6 +1,8 @@
 package com.example.data.repository
 
 
+import android.util.Log
+import com.example.data.storage.UserStorage
 import com.example.data.storage.database.FireBase
 import com.example.data.storage.models.User
 import com.example.domain.models.SignInParam
@@ -8,16 +10,12 @@ import com.example.domain.models.SignUpParam
 import com.example.domain.repository.UserRepository
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
-import com.google.firebase.auth.AuthResult
 
-import com.google.firebase.auth.FirebaseAuth
-import org.jetbrains.annotations.Async
+class UserRepositoryImpl(private val fire: UserStorage): UserRepository {
 
-
-class UserRepositoryImpl( private val auth: FirebaseAuth): UserRepository {
-    val fire = FireBase(auth)
 
     override suspend fun signIn(param: SignInParam): SignInResult {
+        Log.e("MyLog", "signIn: ${param.email}")
         val user = InParamToUser(param)
         return try{
            fire.get(user)
@@ -28,6 +26,7 @@ class UserRepositoryImpl( private val auth: FirebaseAuth): UserRepository {
     }
 
     override suspend fun signUp(param: SignUpParam): SignUpResult {
+        Log.e("MyLog", "signIn: ${param.email}")
         val user = UpParamToUser(param)
         return try{
             fire.save(user)

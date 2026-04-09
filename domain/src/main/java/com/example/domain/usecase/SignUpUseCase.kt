@@ -7,6 +7,7 @@ import com.example.domain.validation.AuthValidationError
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
 
+
 class SignUpUseCase(private val userRepository: UserRepository){
     suspend fun execute(param: SignUpParam): SignUpResult {
         val email = param.email
@@ -22,6 +23,7 @@ class SignUpUseCase(private val userRepository: UserRepository){
         if(!isValidEmail(email)){
             return SignUpResult.ValidationError(AuthValidationError.InvalidEmail)
         }
+
         return userRepository.signUp(SignUpParam(email = email, password = password))
     }
 
