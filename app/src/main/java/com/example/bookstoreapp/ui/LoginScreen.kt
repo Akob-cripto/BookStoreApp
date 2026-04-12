@@ -20,35 +20,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
-import com.example.bookstoreapp.ui.main_screen.MainScreen
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
+import com.example.domain.validation.AuthValidationError
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun LoginScreen(navController: NavController) {
-
-
-
+    val context = LocalContext.current
 
     val emailState = remember {
         mutableStateOf("")
@@ -58,41 +53,62 @@ fun LoginScreen(navController: NavController) {
         mutableStateOf("")
     }
 
-
     val vm: MainViewModel = koinViewModel()
-
 
     val signInResult by vm.signInResultLiveData.observeAsState()
     val signUpResult by vm.signUpResultLiveData.observeAsState()
 
     LaunchedEffect(signInResult) {
-        Log.e("MyLog", "signInResult: $signInResult")
         when (val result = signInResult) {
-            SignInResult.Success -> {
+            is SignInResult.Success -> {
                 navController.navigate("main")
             }
+            is SignInResult.ValidationError -> {
+                val error = result.error
+                when(error){
+                    is AuthValidationError.EmptyEmail -> {
+                        Toast.makeText(context, "Email cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                    is AuthValidationError.InvalidEmail -> {
+                        Toast.makeText(context, "Invalid Email", Toast.LENGTH_SHORT).show()
+                    }
+                    is AuthValidationError.EmptyPassword -> {
+                        Toast.makeText(context, "Password cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {}
+                }
+            }
             else -> {
-                Log.e("MyLog", "signInResult: $signInResult")
             }
         }
     }
 
     LaunchedEffect(signUpResult) {
-        Log.e("MyLog", "signUpResult: $signInResult")
         when (val result = signUpResult) {
-            SignUpResult.Success -> {
+
+            is SignUpResult.Success -> {
                 navController.navigate("main")
             }
-            else -> {
-                Log.e("MyLog", "signUpResult: $signUpResult")
 
+            is SignUpResult.ValidationError -> {
+                val error = result.error
+                when(error){
+                    is AuthValidationError.EmptyEmail -> {
+                        Toast.makeText(context, "Email cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                    is AuthValidationError.InvalidEmail -> {
+                        Toast.makeText(context, "Invalid Email", Toast.LENGTH_SHORT).show()
+                    }
+                    is AuthValidationError.EmptyPassword -> {
+                        Toast.makeText(context, "Password cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {}
+                }
             }
+
+            else -> {}
         }
     }
-
-
-
-    val coroutineScope = rememberCoroutineScope()
 
     Image(
         painter = painterResource(R.drawable.bg_bookstore_login),
@@ -153,17 +169,11 @@ fun LoginScreen(navController: NavController) {
 
 
         LoginButton(text = "Sign In") {
-            coroutineScope.launch{
-                vm.get(email = emailState.value, password = passwordState.value)
-            }
+                vm.signIn(email = emailState.value, password = passwordState.value)
         }
-
 
         LoginButton(text = "Sign Up") {
-            coroutineScope.launch{
-                vm.save(email = emailState.value, password = passwordState.value)
-            }
+                vm.signUp(email = emailState.value, password = passwordState.value)
         }
-
     }
 }
