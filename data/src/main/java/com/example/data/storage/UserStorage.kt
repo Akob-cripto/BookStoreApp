@@ -1,11 +1,13 @@
 package com.example.data.storage
 
-import com.example.data.storage.models.User
-import com.google.firebase.auth.AuthResult
+import com.example.data.storage.models.DataAuthRequest
+import com.example.data.storage.models.DataAuthUser
 
 interface  UserStorage {
-    suspend fun save(user: User)
+    suspend fun signUp(user: DataAuthRequest): DataAuthUser
 
-    suspend fun get(user: User)
+    suspend fun signIn(user: DataAuthRequest): DataAuthUser
+
+    suspend fun isAdmin(): Boolean
 }
 

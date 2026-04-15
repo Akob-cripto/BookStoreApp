@@ -11,7 +11,8 @@ val appModule = module {
     viewModel {
         MainViewModel(
             signInUseCase = get(),
-            signUpUseCase = get()
+            signUpUseCase = get(),
+            checkIsAdminUseCase = get()
         )
     }
 }

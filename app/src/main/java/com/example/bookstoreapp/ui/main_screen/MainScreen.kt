@@ -19,17 +19,15 @@ import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomMenu
 import com.example.bookstoreapp.ui.theme.DarkBlue
 
 
-@Preview(showBackground = true)
 @Composable
-fun MainScreen(){
-
+fun MainScreen(email: String, userId: String){
     val drawerState = rememberDrawerState(DrawerValue.Open)
     ModalNavigationDrawer(
         modifier = Modifier.fillMaxWidth(),
         drawerState = drawerState,
         drawerContent = {
             Column(modifier = Modifier.fillMaxWidth(0.7f)) {
-                DrawerHeader()
+                DrawerHeader(email)
                 DrawerBody()
             }
         }
@@ -41,9 +39,8 @@ fun MainScreen(){
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues = paddingValues)){
-                    Text(text = "Главный Экран")
+                    Text(text = userId)
                 }
-
         }
     }
 }

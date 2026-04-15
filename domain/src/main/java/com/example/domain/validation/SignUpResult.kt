@@ -1,9 +1,13 @@
 package com.example.domain.validation
 
-sealed class SignUpResult {
-    object Success : SignUpResult()
+import com.example.domain.models.AuthUser
 
-    class ValidationError(
+sealed class SignUpResult {
+    data class Success(
+        val user: AuthUser
+    ) : SignUpResult()
+
+    data class ValidationError(
         val error: AuthValidationError
     ) : SignUpResult()
 

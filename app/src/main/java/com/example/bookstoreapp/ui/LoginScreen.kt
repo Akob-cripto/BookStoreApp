@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
+import com.example.bookstoreapp.ui.navigation.Main
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
-import com.example.domain.validation.AuthValidationError
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
 import org.koin.androidx.compose.koinViewModel
@@ -46,11 +46,11 @@ fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
 
     val emailState = remember {
-        mutableStateOf("")
+        mutableStateOf("akobeduardovic318@gmail.com")
     }
 
     val passwordState = remember {
-        mutableStateOf("")
+        mutableStateOf("Akob2007)")
     }
 
     val vm: MainViewModel = koinViewModel()
@@ -61,52 +61,43 @@ fun LoginScreen(navController: NavController) {
     LaunchedEffect(signInResult) {
         when (val result = signInResult) {
             is SignInResult.Success -> {
-                navController.navigate("main")
+                navController.navigate(Main(email = result.user.email, userId = result.user.userId))
+                vm.clearSignInResult()
             }
+
             is SignInResult.ValidationError -> {
                 val error = result.error
-                when(error){
-                    is AuthValidationError.EmptyEmail -> {
-                        Toast.makeText(context, "Email cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                    is AuthValidationError.InvalidEmail -> {
-                        Toast.makeText(context, "Invalid Email", Toast.LENGTH_SHORT).show()
-                    }
-                    is AuthValidationError.EmptyPassword -> {
-                        Toast.makeText(context, "Password cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {}
-                }
+                showAuthValidationError(error, context)
+                vm.clearSignInResult()
             }
-            else -> {
+
+            is  SignInResult.ServerError -> {
+                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                vm.clearSignInResult()
             }
+
+            else -> Unit
         }
     }
 
     LaunchedEffect(signUpResult) {
-        when (val result = signUpResult) {
-
+        when(val result = signUpResult) {
             is SignUpResult.Success -> {
-                navController.navigate("main")
+                navController.navigate(Main(email = result.user.email, userId = result.user.userId))
+                vm.clearSignUpResult()
             }
 
             is SignUpResult.ValidationError -> {
-                val error = result.error
-                when(error){
-                    is AuthValidationError.EmptyEmail -> {
-                        Toast.makeText(context, "Email cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                    is AuthValidationError.InvalidEmail -> {
-                        Toast.makeText(context, "Invalid Email", Toast.LENGTH_SHORT).show()
-                    }
-                    is AuthValidationError.EmptyPassword -> {
-                        Toast.makeText(context, "Password cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {}
-                }
+                showAuthValidationError(result.error, context)
+                vm.clearSignUpResult()
             }
 
-            else -> {}
+            is SignUpResult.ServerError -> {
+                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                vm.clearSignUpResult()
+            }
+
+            else -> Unit
         }
     }
 
@@ -128,7 +119,7 @@ fun LoginScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 40.dp, end = 40.dp),
+            .padding(horizontal = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

@@ -7,8 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.bookstoreapp.ui.LoginScreen
 import com.example.bookstoreapp.ui.main_screen.MainScreen
+import com.example.bookstoreapp.ui.navigation.Login
+import com.example.bookstoreapp.ui.navigation.Main
 
 class MainActivity : ComponentActivity() {
 
@@ -23,14 +26,15 @@ class MainActivity : ComponentActivity() {
 
             NavHost(
                 navController = navController,
-                startDestination = "login"
+                startDestination = Login
             ) {
-                composable("login") {
+                composable<Login> {
                     LoginScreen(navController = navController)
                 }
 
-                composable("main") {
-                    MainScreen()
+                composable<Main> {backStackEntry ->
+                    val route = backStackEntry.toRoute<Main>()
+                    MainScreen(email = route.email, userId = route.userId)
                 }
             }
         }

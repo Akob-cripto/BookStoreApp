@@ -26,7 +26,7 @@ import com.example.bookstoreapp.ui.theme.DarkBlue
 
 
 @Composable
-fun DrawerHeader() {
+fun DrawerHeader(email: String) {
     Column(
         modifier = Modifier
             .background(color = DarkBlue)
@@ -48,6 +48,12 @@ fun DrawerHeader() {
             color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            text = email,
+            color = Color.Gray,
+            fontSize = 16.sp,
         )
     }
 }
