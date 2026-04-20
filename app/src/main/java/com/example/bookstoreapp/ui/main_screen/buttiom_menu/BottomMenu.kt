@@ -36,10 +36,7 @@ fun BottomMenu() {
                     Text(text = item.title)
                 }
             )
-
         }
     }
-
-
 }
 

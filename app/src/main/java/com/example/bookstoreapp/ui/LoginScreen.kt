@@ -1,6 +1,6 @@
 package com.example.bookstoreapp.ui
 
-import android.util.Log
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -159,12 +159,14 @@ fun LoginScreen(navController: NavController) {
         }
 
 
-        LoginButton(text = "Sign In") {
+        CustomButton(text = "Sign In") {
                 vm.signIn(email = emailState.value, password = passwordState.value)
         }
 
-        LoginButton(text = "Sign Up") {
+        CustomButton(text = "Sign Up") {
                 vm.signUp(email = emailState.value, password = passwordState.value)
         }
+
+
     }
 }

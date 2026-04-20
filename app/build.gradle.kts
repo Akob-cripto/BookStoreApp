@@ -82,4 +82,6 @@ dependencies {
     implementation(libs.androidx.compose.runtime.livedata)
 
     implementation(libs.androidx.navigation)
+
+    implementation(libs.coil.compose)
 }

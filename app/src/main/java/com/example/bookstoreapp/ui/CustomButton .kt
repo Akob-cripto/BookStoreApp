@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import com.example.bookstoreapp.ui.theme.ButtonColor
 
 @Composable
-fun LoginButton(
+fun CustomButton(
     text: String,
     onClick: () -> Unit
 ) {
