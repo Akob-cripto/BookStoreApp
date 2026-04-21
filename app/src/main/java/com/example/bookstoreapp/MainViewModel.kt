@@ -7,18 +7,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.domain.models.AuthUser
+import com.example.domain.models.NewBookParam
 import com.example.domain.models.SignParam
 import com.example.domain.usecase.CheckIsAdminUseCase
+import com.example.domain.usecase.SaveBookUseCase
 import com.example.domain.usecase.SignInUseCase
 import com.example.domain.usecase.SignUpUseCase
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
 import kotlinx.coroutines.launch
+import kotlin.String
 
 class MainViewModel(
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
-    private val checkIsAdminUseCase: CheckIsAdminUseCase
+    private val checkIsAdminUseCase: CheckIsAdminUseCase,
+    private val saveBookUseCase: SaveBookUseCase
 ) : ViewModel() {
 
     private val signInResultLiveMutable = MutableLiveData<SignInResult?>(null)
@@ -57,11 +61,29 @@ class MainViewModel(
         }
     }
 
-    fun clearSignInResult() {
+    fun saveBook(
+        category: String,
+        imageUri: String,
+        title: String,
+        description: String){
+        viewModelScope.launch {
+             val param = NewBookParam(
+             category = category,
+             imageUri= imageUri,
+             title= title,
+             description= description)
+
+            Log.d("MyLog", "In saveBook")
+
+            val result = saveBookUseCase.execute(param)
+        }
+    }
+
+     fun clearSignInResult() {
         signInResultLiveMutable.value = null
     }
 
-    fun clearSignUpResult() {
+     fun clearSignUpResult() {
         signUpResultLiveMutable.value = null
     }
 }

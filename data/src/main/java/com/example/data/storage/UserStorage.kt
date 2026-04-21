@@ -2,12 +2,15 @@ package com.example.data.storage
 
 import com.example.data.storage.models.DataAuthRequest
 import com.example.data.storage.models.DataAuthUser
+import com.example.domain.models.NewBookParam
 
 interface  UserStorage {
-    suspend fun signUp(user: DataAuthRequest): DataAuthUser
+    suspend fun signUpFirebase(user: DataAuthRequest): DataAuthUser
 
-    suspend fun signIn(user: DataAuthRequest): DataAuthUser
+    suspend fun signInFirebase(user: DataAuthRequest): DataAuthUser
 
-    suspend fun isAdmin(): Boolean
+    suspend fun isAdminFirebase(): Boolean
+
+    suspend fun saveBookFirebase(param: NewBookParam): Boolean
 }
 

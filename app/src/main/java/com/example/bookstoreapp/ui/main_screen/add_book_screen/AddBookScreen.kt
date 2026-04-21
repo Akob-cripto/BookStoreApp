@@ -1,6 +1,7 @@
 package com.example.bookstoreapp.ui.main_screen.add_book_screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,21 +25,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
 import com.example.bookstoreapp.ui.CustomButton
 import com.example.bookstoreapp.ui.RoundedCornerTextField
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddBookScreen() {
+
+    val vm = koinViewModel<MainViewModel>()
+
     val title = remember {
         mutableStateOf("")
+    }
+
+    val selectedCategory = remember{
+        mutableStateOf("drama")
     }
 
     val description = remember {
@@ -86,9 +97,10 @@ fun AddBookScreen() {
             painter = painterResource(R.drawable.logo),
             contentDescription = "Logo",
             modifier = Modifier
-                .size(200.dp)
+                .size(150.dp)
                 .clip(RoundedCornerShape(50.dp))
         )
+
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -99,6 +111,12 @@ fun AddBookScreen() {
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        RoundedCornerDropDownMenu { selectedItem ->
+            selectedCategory.value = selectedItem
+        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -134,7 +152,12 @@ fun AddBookScreen() {
         }
 
         CustomButton(text = "Save") {
-
+            vm.saveBook(
+                category = selectedCategory.value,
+                imageUri = selectedImageUri.value.toString(),
+                title = title.value,
+                description = description.value
+            )
         }
     }
 }

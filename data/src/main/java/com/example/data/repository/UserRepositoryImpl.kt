@@ -6,6 +6,7 @@ import com.example.data.storage.UserStorage
 import com.example.data.storage.models.DataAuthRequest
 import com.example.data.storage.models.DataAuthUser
 import com.example.domain.models.AuthUser
+import com.example.domain.models.NewBookParam
 import com.example.domain.models.SignParam
 import com.example.domain.repository.UserRepository
 import com.example.domain.validation.SignInResult
@@ -18,7 +19,7 @@ class UserRepositoryImpl(private val fire: UserStorage) : UserRepository {
         Log.e("MyLog", "signIn: ${param.email}")
         val user = fromSignParamToDataUserRequest(param)
         return try {
-            val AuthUser = fromDataAuthUserToAuthUser(fire.signIn(user))
+            val AuthUser = fromDataAuthUserToAuthUser(fire.signInFirebase(user))
             SignInResult.Success(AuthUser)
         } catch (e: Exception) {
             SignInResult.ServerError(e.message.toString() ?: "Sign in failed")
@@ -29,7 +30,7 @@ class UserRepositoryImpl(private val fire: UserStorage) : UserRepository {
         Log.e("MyLog", "signIn: ${user.email}")
         val user = fromSignParamToDataUserRequest(user)
         return try {
-            val AuthUser = fromDataAuthUserToAuthUser(fire.signUp(user))
+            val AuthUser = fromDataAuthUserToAuthUser(fire.signUpFirebase(user))
             SignUpResult.Success(AuthUser)
         } catch (e: Exception) {
             SignUpResult.ServerError(e.message.toString() ?: "Sign up failed")
@@ -37,7 +38,12 @@ class UserRepositoryImpl(private val fire: UserStorage) : UserRepository {
     }
 
     override suspend fun isCurrentUserAdmin(): Boolean {
-        return fire.isAdmin()
+        return fire.isAdminFirebase()
+    }
+
+    override suspend fun saveBook(param: NewBookParam): Boolean {
+        Log.d("MyLog", "in saveBook UserRepositoryImpl")
+        return fire.saveBookFirebase(param)
     }
 
     fun fromSignParamToDataUserRequest(user: SignParam): DataAuthRequest {
