@@ -31,8 +31,11 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
+import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
+import com.example.bookstoreapp.ui.navigation.AddBook
 import com.example.bookstoreapp.ui.theme.ButtonColor
 import com.example.bookstoreapp.ui.theme.DarkBlue
 import com.example.bookstoreapp.ui.theme.DarkTransparentBlue
@@ -40,7 +43,7 @@ import com.example.bookstoreapp.ui.theme.GrayLight
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DrawerBody() {
+fun DrawerBody(navController: NavController) {
     val categoriesList = remember {
         listOf("Favorite", "Fantasy", "Drama", "Bestsellers")
     }
@@ -122,7 +125,9 @@ fun DrawerBody() {
 
             if (isAdmin == true) {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(AddBook)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(5.dp),

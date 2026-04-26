@@ -15,13 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
 import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomMenu
 import com.example.bookstoreapp.ui.theme.DarkBlue
 
 
 @Composable
-fun MainScreen(email: String, userId: String){
+fun MainScreen(
+    email: String,
+    userId: String,
+    navController: NavController){
     val drawerState = rememberDrawerState(DrawerValue.Open)
     ModalNavigationDrawer(
         modifier = Modifier.fillMaxWidth(),
@@ -29,7 +33,7 @@ fun MainScreen(email: String, userId: String){
         drawerContent = {
             Column(modifier = Modifier.fillMaxWidth(0.7f)) {
                 DrawerHeader(email)
-                DrawerBody()
+                DrawerBody(navController = navController)
             }
         }
     ) {

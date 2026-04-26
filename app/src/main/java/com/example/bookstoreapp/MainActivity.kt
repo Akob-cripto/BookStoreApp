@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import com.example.bookstoreapp.ui.LoginScreen
 import com.example.bookstoreapp.ui.main_screen.MainScreen
 import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
+import com.example.bookstoreapp.ui.navigation.AddBook
 import com.example.bookstoreapp.ui.navigation.Login
 import com.example.bookstoreapp.ui.navigation.Main
 
@@ -23,21 +24,27 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-//            val navController = rememberNavController()
-//            NavHost(
-//                navController = navController,
-//                startDestination = Login
-//            ) {
-//                composable<Login> {
-//                    LoginScreen(navController = navController)
-//                }
-//
-//                composable<Main> {backStackEntry ->
-//                    val route = backStackEntry.toRoute<Main>()
-//                    MainScreen(email = route.email, userId = route.userId)
-//                }
-//            }
-            AddBookScreen()
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Login
+            ) {
+                composable<Login> {
+                    LoginScreen(navController = navController)
+                }
+
+                composable<Main> {backStackEntry ->
+                    val route = backStackEntry.toRoute<Main>()
+                    MainScreen(
+                        email = route.email,
+                        userId = route.userId,
+                        navController = navController)
+                }
+
+                composable<AddBook>() {
+                    AddBookScreen(navController)
+                }
+            }
         }
     }
 }

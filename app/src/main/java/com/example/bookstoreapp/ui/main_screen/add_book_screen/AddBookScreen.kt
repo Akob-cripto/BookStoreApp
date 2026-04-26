@@ -31,16 +31,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
 import com.example.bookstoreapp.ui.CustomButton
 import com.example.bookstoreapp.ui.RoundedCornerTextField
+import com.example.bookstoreapp.ui.main_screen.MainScreen
+import com.example.bookstoreapp.ui.navigation.Main
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AddBookScreen() {
+fun AddBookScreen(navController: NavController) {
 
     val vm = koinViewModel<MainViewModel>()
 
@@ -158,6 +161,8 @@ fun AddBookScreen() {
                 title = title.value,
                 description = description.value
             )
+
+            navController.popBackStack()
         }
     }
 }

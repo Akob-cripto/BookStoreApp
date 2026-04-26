@@ -11,3 +11,6 @@ data class Main(
     val email: String,
     val userId: String
 )
+
+@Serializable
+object AddBook

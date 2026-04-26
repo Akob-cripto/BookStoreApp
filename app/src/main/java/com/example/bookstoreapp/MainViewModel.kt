@@ -47,6 +47,7 @@ class MainViewModel(
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
+            Log.d("MyLog", "in signIn fun")
             val param = SignParam(email = email, password = password)
             val result = signInUseCase.execute(param)
             signInResultLiveMutable.value = result
