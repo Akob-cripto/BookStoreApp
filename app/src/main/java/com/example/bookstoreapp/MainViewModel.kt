@@ -6,22 +6,30 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bookstoreapp.models.MainUiState
 import com.example.domain.models.AuthUser
+import com.example.domain.models.Book
 import com.example.domain.models.NewBookParam
 import com.example.domain.models.SignParam
 import com.example.domain.usecase.CheckIsAdminUseCase
+import com.example.domain.usecase.GetBooksUseCase
 import com.example.domain.usecase.SaveBookUseCase
 import com.example.domain.usecase.SignInUseCase
 import com.example.domain.usecase.SignUpUseCase
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.String
 
 class MainViewModel(
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val checkIsAdminUseCase: CheckIsAdminUseCase,
+    private val getBooksUseCase: GetBooksUseCase,
     private val saveBookUseCase: SaveBookUseCase
 ) : ViewModel() {
 
@@ -35,6 +43,86 @@ class MainViewModel(
 
     val isAdminLiveData: LiveData<Boolean> = isAdminResultLiveMutable
 
+    private val _mainUiState = MutableStateFlow(MainUiState())
+    val mainUiState = _mainUiState.asStateFlow()
+
+
+    init {
+        loadBooks()
+    }
+
+    fun loadBooks() {
+        viewModelScope.launch {
+            _mainUiState.value = _mainUiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+
+            try {
+                val books = getBooksUseCase.execute()
+
+                _mainUiState.value = _mainUiState.value.copy(
+                    isLoading = false,
+                    books = books
+                )
+            } catch (e: Exception) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Ошибка загрузки книг"
+                )
+            }
+        }
+    }
+
+    fun saveBook(
+        category: String,
+        imageUri: String,
+        title: String,
+        description: String,
+        author: String
+    ) {
+        viewModelScope.launch {
+            _mainUiState.value = _mainUiState.value.copy(
+                isLoading = true,
+                error = null,
+                isBookSaved = false
+            )
+
+            try {
+                val book = NewBookParam(
+                    category = category,
+                    imageUri = imageUri,
+                    title = title,
+                    description = description,
+                    author = author
+                )
+
+                val result = withContext(Dispatchers.IO) {
+                    saveBookUseCase.execute(book)
+                }
+
+                if (result) {
+                    _mainUiState.value = _mainUiState.value.copy(
+                        isLoading = false,
+                        isBookSaved = true
+                    )
+
+                    loadBooks()
+                } else {
+                    _mainUiState.value = _mainUiState.value.copy(
+                        isLoading = false,
+                        error = "Не удалось сохранить книгу"
+                    )
+                }
+
+            } catch (e: Exception) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Ошибка сохранения книги"
+                )
+            }
+        }
+    }
 
     fun signUp(email: String, password: String) {
         viewModelScope.launch {
@@ -54,7 +142,7 @@ class MainViewModel(
         }
     }
 
-    fun checkIsAdmin(){
+    fun checkIsAdmin() {
         viewModelScope.launch {
             Log.e("MyLog", "${isAdminResultLiveMutable.value}")
             isAdminResultLiveMutable.value = checkIsAdminUseCase.execute()
@@ -62,29 +150,11 @@ class MainViewModel(
         }
     }
 
-    fun saveBook(
-        category: String,
-        imageUri: String,
-        title: String,
-        description: String){
-        viewModelScope.launch {
-             val param = NewBookParam(
-             category = category,
-             imageUri= imageUri,
-             title= title,
-             description= description)
-
-            Log.d("MyLog", "In saveBook")
-
-            val result = saveBookUseCase.execute(param)
-        }
-    }
-
-     fun clearSignInResult() {
+    fun clearSignInResult() {
         signInResultLiveMutable.value = null
     }
 
-     fun clearSignUpResult() {
+    fun clearSignUpResult() {
         signUpResultLiveMutable.value = null
     }
 }

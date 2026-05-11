@@ -1,8 +1,7 @@
 package com.example.domain.usecase
 
-import com.example.domain.models.AuthUser
 import com.example.domain.models.SignParam
-import com.example.domain.repository.UserRepository
+import com.example.domain.repositories.UserRepository
 import com.example.domain.validation.AuthValidationError
 import com.example.domain.validation.SignUpResult
 

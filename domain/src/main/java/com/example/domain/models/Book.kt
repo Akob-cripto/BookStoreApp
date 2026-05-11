@@ -1,6 +1,6 @@
 package com.example.domain.models
-
-data class NewBookParam(
+data class Book(
+    val id: String,
     val category: String,
     val imageUri: String,
     val title: String,

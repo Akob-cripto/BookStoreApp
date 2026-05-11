@@ -1,6 +1,7 @@
 package com.example.bookstoreapp.di
 
 import com.example.domain.usecase.CheckIsAdminUseCase
+import com.example.domain.usecase.GetBooksUseCase
 import com.example.domain.usecase.SignInUseCase
 import com.example.domain.usecase.SignUpUseCase
 import org.koin.dsl.module
@@ -28,7 +29,11 @@ val domainModule = module {
 
     factory<SaveBookUseCase>{
         SaveBookUseCase(
-            userRepository = get()
+            bookRepository = get()
         )
+    }
+
+    factory<GetBooksUseCase>{
+        GetBooksUseCase(bookRepository = get())
     }
 }

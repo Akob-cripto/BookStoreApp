@@ -10,7 +10,5 @@ interface  UserStorage {
     suspend fun signInFirebase(user: DataAuthRequest): DataAuthUser
 
     suspend fun isAdminFirebase(): Boolean
-
-    suspend fun saveBookFirebase(param: NewBookParam): Boolean
 }
 

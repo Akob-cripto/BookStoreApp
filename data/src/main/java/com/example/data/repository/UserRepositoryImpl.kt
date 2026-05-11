@@ -8,7 +8,7 @@ import com.example.data.storage.models.DataAuthUser
 import com.example.domain.models.AuthUser
 import com.example.domain.models.NewBookParam
 import com.example.domain.models.SignParam
-import com.example.domain.repository.UserRepository
+import com.example.domain.repositories.UserRepository
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
 
@@ -39,11 +39,6 @@ class UserRepositoryImpl(private val fire: UserStorage) : UserRepository {
 
     override suspend fun isCurrentUserAdmin(): Boolean {
         return fire.isAdminFirebase()
-    }
-
-    override suspend fun saveBook(param: NewBookParam): Boolean {
-        Log.d("MyLog", "in saveBook UserRepositoryImpl")
-        return fire.saveBookFirebase(param)
     }
 
     fun fromSignParamToDataUserRequest(user: SignParam): DataAuthRequest {

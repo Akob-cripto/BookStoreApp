@@ -14,6 +14,7 @@ import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
 import com.example.bookstoreapp.ui.navigation.AddBook
 import com.example.bookstoreapp.ui.navigation.Login
 import com.example.bookstoreapp.ui.navigation.Main
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val vm: MainViewModel = koinViewModel()
             NavHost(
                 navController = navController,
                 startDestination = Login
@@ -38,11 +40,15 @@ class MainActivity : ComponentActivity() {
                     MainScreen(
                         email = route.email,
                         userId = route.userId,
-                        navController = navController)
+                        navController = navController,
+                        vm = vm
+                    )
                 }
 
                 composable<AddBook>() {
-                    AddBookScreen(navController)
+                    AddBookScreen(
+                        navController,
+                        vm)
                 }
             }
         }

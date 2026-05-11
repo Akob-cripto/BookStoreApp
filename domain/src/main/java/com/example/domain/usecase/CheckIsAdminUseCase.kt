@@ -1,6 +1,6 @@
 package com.example.domain.usecase
 
-import com.example.domain.repository.UserRepository
+import com.example.domain.repositories.UserRepository
 
 class CheckIsAdminUseCase(private val userRepository: UserRepository) {
     suspend fun execute(): Boolean {

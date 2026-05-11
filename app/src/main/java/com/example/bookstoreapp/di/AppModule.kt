@@ -15,6 +15,7 @@ val appModule = module {
             signInUseCase = get(),
             signUpUseCase = get(),
             checkIsAdminUseCase = get(),
+            getBooksUseCase = get(),
             saveBookUseCase = get()
         )
     }

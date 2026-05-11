@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,9 +44,8 @@ import com.example.bookstoreapp.ui.theme.BoxFilterColor
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AddBookScreen(navController: NavController) {
-
-    val vm = koinViewModel<MainViewModel>()
+fun AddBookScreen(navController: NavController,
+                  vm: MainViewModel) {
 
     val title = remember {
         mutableStateOf("")
@@ -60,6 +60,10 @@ fun AddBookScreen(navController: NavController) {
     }
 
     val price = remember {
+        mutableStateOf("")
+    }
+
+    val author = remember{
         mutableStateOf("")
     }
 
@@ -143,6 +147,15 @@ fun AddBookScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(10.dp))
 
         RoundedCornerTextField(
+            text = description.value,
+            label = "Author"
+        ) { newText ->
+            author.value = newText
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        RoundedCornerTextField(
             text = price.value,
             label = "Price"
         ) { newText ->
@@ -159,7 +172,8 @@ fun AddBookScreen(navController: NavController) {
                 category = selectedCategory.value,
                 imageUri = selectedImageUri.value.toString(),
                 title = title.value,
-                description = description.value
+                description = description.value,
+                author = author.value
             )
 
             navController.popBackStack()
