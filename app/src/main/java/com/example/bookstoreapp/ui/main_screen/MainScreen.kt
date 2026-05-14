@@ -3,6 +3,7 @@ package com.example.bookstoreapp.ui.main_screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,11 +18,15 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
+import com.example.bookstoreapp.ui.main_screen.add_book_screen.BookItem
 import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomMenu
 import com.example.bookstoreapp.ui.theme.DarkBlue
 
@@ -55,6 +60,25 @@ fun MainScreen(
                     .fillMaxSize()
                     .padding(paddingValues = paddingValues)
             ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Hello, reader 👋",
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
+
+                    Text(
+                        text = "Find your next book",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 when {
                     mainUiState.value.isLoading -> {
                         CircularProgressIndicator()
@@ -67,9 +91,12 @@ fun MainScreen(
                     }
 
                     else -> {
-                        LazyColumn {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = 90.dp)
+                        ) {
                             items(mainUiState.value.books) { book ->
-                                Text(text = book.title)
+                                BookItem(book = book)
                             }
                         }
                     }

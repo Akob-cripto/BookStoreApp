@@ -147,7 +147,7 @@ fun AddBookScreen(navController: NavController,
         Spacer(modifier = Modifier.height(10.dp))
 
         RoundedCornerTextField(
-            text = description.value,
+            text = author.value,
             label = "Author"
         ) { newText ->
             author.value = newText
