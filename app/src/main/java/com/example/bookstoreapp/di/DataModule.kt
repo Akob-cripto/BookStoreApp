@@ -33,7 +33,9 @@ val dataModule = module {
     }
 
     single<BookStorage> {
-        FirebaseBookStorage(firestore = get())
+        FirebaseBookStorage(
+            firestore = get(),
+            auth = get())
     }
 
     single<BookRepository> {

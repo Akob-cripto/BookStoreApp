@@ -2,6 +2,7 @@ package com.example.bookstoreapp.di
 
 
 import android.content.Context
+import androidx.compose.ui.graphics.vector.addPathNodes
 import com.example.bookstoreapp.MainViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -16,7 +17,9 @@ val appModule = module {
             signUpUseCase = get(),
             checkIsAdminUseCase = get(),
             getBooksUseCase = get(),
-            saveBookUseCase = get()
+            saveBookUseCase = get(),
+            removeBookFromFavoritesUseCase = get(),
+            addBookToFavoritesUseCase = get()
         )
     }
 }

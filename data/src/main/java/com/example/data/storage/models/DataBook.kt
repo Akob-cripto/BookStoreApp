@@ -6,5 +6,6 @@ data class DataBook(
     val author: String = "",
     val description: String = "",
     val category: String = "",
-    val imageUri: String = ""
+    val imageUri: String = "",
+    val isFavorite: Boolean = false
 )

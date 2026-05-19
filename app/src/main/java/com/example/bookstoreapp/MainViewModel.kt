@@ -11,8 +11,10 @@ import com.example.domain.models.AuthUser
 import com.example.domain.models.Book
 import com.example.domain.models.NewBookParam
 import com.example.domain.models.SignParam
+import com.example.domain.usecase.AddBookToFavoritesUseCase
 import com.example.domain.usecase.CheckIsAdminUseCase
 import com.example.domain.usecase.GetBooksUseCase
+import com.example.domain.usecase.RemoveBookFromFavoritesUseCase
 import com.example.domain.usecase.SaveBookUseCase
 import com.example.domain.usecase.SignInUseCase
 import com.example.domain.usecase.SignUpUseCase
@@ -30,7 +32,9 @@ class MainViewModel(
     private val signUpUseCase: SignUpUseCase,
     private val checkIsAdminUseCase: CheckIsAdminUseCase,
     private val getBooksUseCase: GetBooksUseCase,
-    private val saveBookUseCase: SaveBookUseCase
+    private val saveBookUseCase: SaveBookUseCase,
+    private val removeBookFromFavoritesUseCase: RemoveBookFromFavoritesUseCase,
+    private val addBookToFavoritesUseCase: AddBookToFavoritesUseCase
 ) : ViewModel() {
 
     private val signInResultLiveMutable = MutableLiveData<SignInResult?>(null)
@@ -144,9 +148,7 @@ class MainViewModel(
 
     fun checkIsAdmin() {
         viewModelScope.launch {
-            Log.e("MyLog", "${isAdminResultLiveMutable.value}")
             isAdminResultLiveMutable.value = checkIsAdminUseCase.execute()
-            Log.e("MyLog", "${isAdminResultLiveMutable.value}")
         }
     }
 
@@ -156,5 +158,19 @@ class MainViewModel(
 
     fun clearSignUpResult() {
         signUpResultLiveMutable.value = null
+    }
+
+    fun onFavoriteClick(book: Book) {
+        viewModelScope.launch {
+            val result = if (book.isFavorite) {
+                removeBookFromFavoritesUseCase.execute(book.id)
+            } else {
+                addBookToFavoritesUseCase.execute(book.id)
+            }
+
+            if (result) {
+                loadBooks()
+            }
+        }
     }
 }
