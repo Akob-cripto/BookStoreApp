@@ -12,20 +12,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun BottomMenu() {
+fun BottomMenu(
+    selectedScreen: BottomScreen,
+    onItemClick: (BottomScreen) -> Unit
+) {
     val items = listOf(
         BottomMenuItem.Home,
         BottomMenuItem.Favs,
         BottomMenuItem.Settings
     )
 
-    val selectedItem = remember { mutableStateOf("Home") }
-
-    NavigationBar() {
+    NavigationBar {
         items.forEach { item ->
+
+            val screen = when (item) {
+                BottomMenuItem.Home -> BottomScreen.Books
+                BottomMenuItem.Favs -> BottomScreen.Favorites
+                BottomMenuItem.Settings -> BottomScreen.Profile
+            }
+
             NavigationBarItem(
-                selected = item.title == selectedItem.value,
-                onClick = {selectedItem.value = item.title},
+                selected = selectedScreen == screen,
+                onClick = {
+                    onItemClick(screen)
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = item.iconId),

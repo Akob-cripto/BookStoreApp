@@ -53,16 +53,26 @@ class FireBaseStorage(
     }
 
     override suspend fun isAdminFirebase(): Boolean {
-        val uid = auth.currentUser?.uid ?: return false
+        val uid = auth.currentUser?.uid
+
+        Log.d("MyLog", "uid = $uid")
+
+        if (uid == null) return false
 
         return try {
-            val doc = firestore.collection("Users")
+            val doc = firestore.collection("users")
                 .document(uid)
                 .get()
                 .await()
 
+            Log.d("MyLog", "doc exists = ${doc.exists()}")
+            Log.d("MyLog", "doc id = ${doc.id}")
+            Log.d("MyLog", "doc data = ${doc.data}")
+            Log.d("MyLog", "isAdmin = ${doc.getBoolean("isAdmin")}")
+
             doc.getBoolean("isAdmin") == true
         } catch (e: Exception) {
+            Log.e("MyLog", "isAdminFirebase error: ${e.message}", e)
             false
         }
     }

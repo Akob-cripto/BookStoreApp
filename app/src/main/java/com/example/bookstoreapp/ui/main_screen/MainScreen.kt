@@ -1,15 +1,11 @@
 package com.example.bookstoreapp.ui.main_screen
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -17,21 +13,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookstoreapp.MainViewModel
-import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
-import com.example.bookstoreapp.ui.main_screen.add_book_screen.BookItem
 import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomMenu
-import com.example.bookstoreapp.ui.theme.DarkBlue
-
+import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomScreen
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun MainScreen(
@@ -42,7 +35,23 @@ fun MainScreen(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Open)
 
+    var selectedScreen by remember {
+        mutableStateOf(BottomScreen.Books)
+    }
+
+    var selectedCategory by remember {
+        mutableStateOf<String?>(null)
+    }
+
     val mainUiState = vm.mainUiState.collectAsStateWithLifecycle()
+
+
+    LaunchedEffect(userId) {
+        vm.checkIsAdmin()
+        vm.loadBooks()
+    }
+
+
 
     ModalNavigationDrawer(
         modifier = Modifier.fillMaxWidth(),
@@ -50,45 +59,37 @@ fun MainScreen(
         drawerContent = {
             Column(modifier = Modifier.fillMaxWidth(0.7f)) {
                 DrawerHeader(email)
-                DrawerBody(navController = navController)
+                DrawerBody(
+                    navController = navController,
+                    selectedCategory,
+                    mainUiState.value.isAdmin
+                ) { category ->
+                    selectedCategory = category
+                }
             }
         }
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            bottomBar = { BottomMenu() }) { paddingValues ->
-            Column(
+            bottomBar = {
+                BottomMenu(
+                    selectedScreen = selectedScreen,
+                    onItemClick = { screen ->
+                        selectedScreen = screen
+                    }
+                )
+            }
+        ) { paddingValues ->
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues = paddingValues)
+                    .padding(paddingValues)
             ) {
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Hello, reader 👋",
-                        fontSize = 16.sp,
-                        color = Color.Gray
-                    )
-
-                    Text(
-                        text = "Find your next book",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
                 when {
                     mainUiState.value.isLoading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
 
                     mainUiState.value.error != null -> {
@@ -98,16 +99,37 @@ fun MainScreen(
                     }
 
                     else -> {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(bottom = 90.dp)
-                        ) {
-                            items(mainUiState.value.books) { book ->
-                                BookItem(
-                                    book = book,
-                                    onFavoriteClick = {
+                        when (selectedScreen) {
+                            BottomScreen.Books -> {
+                                val filteredBooks = if (selectedCategory == null || selectedCategory == "All") {
+                                    mainUiState.value.books
+                                } else {
+                                    mainUiState.value.books.filter { book ->
+                                        book.category == selectedCategory
+                                    }
+                                }
+
+                                BooksContent(
+                                    books = filteredBooks,
+                                    onFavoriteClick = { book ->
                                         vm.onFavoriteClick(book)
                                     }
+                                )
+                            }
+
+                            BottomScreen.Favorites -> {
+                                FavoritesContent(
+                                    books = mainUiState.value.books,
+                                    onFavoriteClick = { book ->
+                                        vm.onFavoriteClick(book)
+                                    }
+                                )
+                            }
+
+                            BottomScreen.Profile -> {
+                                ProfileContent(
+                                    email = email,
+                                    userId = userId
                                 )
                             }
                         }

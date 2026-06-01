@@ -10,51 +10,38 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.bookstoreapp.MainViewModel
 import com.example.bookstoreapp.R
-import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
 import com.example.bookstoreapp.ui.navigation.AddBook
-import com.example.bookstoreapp.ui.theme.ButtonColor
 import com.example.bookstoreapp.ui.theme.DarkBlue
 import com.example.bookstoreapp.ui.theme.DarkTransparentBlue
 import com.example.bookstoreapp.ui.theme.GrayLight
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DrawerBody(navController: NavController) {
+fun DrawerBody(
+    navController: NavController,
+    selectedCategory: String?,
+    isAdmin: Boolean,
+    onCategoryClick: (String?) -> Unit
+) {
     val categoriesList = remember {
-        listOf("Favorite", "Fantasy", "Drama", "Bestsellers")
+        listOf("All", "Favorite", "Fantasy", "Drama", "Bestsellers")
     }
-
-    val vm: MainViewModel = koinViewModel()
-
-    LaunchedEffect(Unit) {
-        vm.checkIsAdmin()
-    }
-
-    val isAdmin by vm.isAdminLiveData.observeAsState()
 
     Box(
         modifier = Modifier
@@ -100,7 +87,9 @@ fun DrawerBody(navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { }
+                            .clickable {
+                                onCategoryClick(item)
+                            }
                     ) {
                         Spacer(modifier = Modifier.height(12.dp))
 
@@ -123,7 +112,7 @@ fun DrawerBody(navController: NavController) {
                 }
             }
 
-            if (isAdmin == true) {
+            if (isAdmin) {
                 Button(
                     onClick = {
                         navController.navigate(AddBook)

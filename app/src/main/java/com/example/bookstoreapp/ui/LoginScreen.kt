@@ -63,6 +63,7 @@ fun LoginScreen(navController: NavController) {
             is SignInResult.Success -> {
                 navController.navigate(Main(email = result.user.email, userId = result.user.userId))
                 vm.clearSignInResult()
+                vm.checkIsAdmin()
             }
 
             is SignInResult.ValidationError -> {
@@ -85,6 +86,7 @@ fun LoginScreen(navController: NavController) {
             is SignUpResult.Success -> {
                 navController.navigate(Main(email = result.user.email, userId = result.user.userId))
                 vm.clearSignUpResult()
+                vm.checkIsAdmin()
             }
 
             is SignUpResult.ValidationError -> {

@@ -45,8 +45,6 @@ class MainViewModel(
     val signInResultLiveData: LiveData<SignInResult?> = signInResultLiveMutable
     val signUpResultLiveData: LiveData<SignUpResult?> = signUpResultLiveMutable
 
-    val isAdminLiveData: LiveData<Boolean> = isAdminResultLiveMutable
-
     private val _mainUiState = MutableStateFlow(MainUiState())
     val mainUiState = _mainUiState.asStateFlow()
 
@@ -147,8 +145,16 @@ class MainViewModel(
     }
 
     fun checkIsAdmin() {
+        Log.d("MyLog", "checkIsAdmin called")
+
         viewModelScope.launch {
-            isAdminResultLiveMutable.value = checkIsAdminUseCase.execute()
+            val result = checkIsAdminUseCase.execute()
+
+            Log.d("MyLog", "admin result = $result")
+
+            _mainUiState.value = _mainUiState.value.copy(
+                isAdmin = result
+            )
         }
     }
 
