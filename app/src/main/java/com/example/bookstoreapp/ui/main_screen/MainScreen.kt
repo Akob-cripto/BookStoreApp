@@ -25,6 +25,7 @@ import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomMenu
 import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomScreen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.bookstoreapp.ui.navigation.Login
 
 @Composable
 fun MainScreen(
@@ -50,7 +51,6 @@ fun MainScreen(
         vm.checkIsAdmin()
         vm.loadBooks()
     }
-
 
 
     ModalNavigationDrawer(
@@ -101,19 +101,24 @@ fun MainScreen(
                     else -> {
                         when (selectedScreen) {
                             BottomScreen.Books -> {
-                                val filteredBooks = if (selectedCategory == null || selectedCategory == "All") {
-                                    mainUiState.value.books
-                                } else {
-                                    mainUiState.value.books.filter { book ->
-                                        book.category == selectedCategory
+                                val filteredBooks =
+                                    if (selectedCategory == null || selectedCategory == "All") {
+                                        mainUiState.value.books
+                                    } else {
+                                        mainUiState.value.books.filter { book ->
+                                            book.category.equals(
+                                                selectedCategory,
+                                                ignoreCase = true
+                                            )
+                                        }
                                     }
-                                }
 
                                 BooksContent(
                                     books = filteredBooks,
                                     onFavoriteClick = { book ->
                                         vm.onFavoriteClick(book)
-                                    }
+                                    },
+                                    navController = navController
                                 )
                             }
 
@@ -122,14 +127,23 @@ fun MainScreen(
                                     books = mainUiState.value.books,
                                     onFavoriteClick = { book ->
                                         vm.onFavoriteClick(book)
-                                    }
+                                    },
+                                    navController = navController
                                 )
                             }
 
                             BottomScreen.Profile -> {
                                 ProfileContent(
                                     email = email,
-                                    userId = userId
+                                    onLogoutClick = {
+                                        vm.signOut()
+
+                                        navController.navigate(Login) {
+                                            popUpTo(0) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    }
                                 )
                             }
                         }

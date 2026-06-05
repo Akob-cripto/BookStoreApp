@@ -168,12 +168,20 @@ fun AddBookScreen(navController: NavController,
         }
 
         CustomButton(text = "Save") {
+            val priceValue = price.value.toDoubleOrNull()
+
+            if (priceValue == null) {
+                Log.d("MyLog", "Некорректная цена")
+                return@CustomButton
+            }
+
             vm.saveBook(
                 category = selectedCategory.value,
                 imageUri = selectedImageUri.value.toString(),
                 title = title.value,
                 description = description.value,
-                author = author.value
+                author = author.value,
+                price = priceValue
             )
 
             navController.popBackStack()

@@ -31,7 +31,8 @@ class BookRepositoryImpl(
                 author = book.author,
                 description = book.description,
                 category = book.category,
-                imageUri = book.imageUri
+                imageUri = book.imageUri,
+                price = book.price
             )
         )
     }

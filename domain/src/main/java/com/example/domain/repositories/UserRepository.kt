@@ -17,4 +17,6 @@ interface UserRepository {
 
     suspend fun isCurrentUserAdmin(): Boolean
 
+    fun signOut()
+
 }

@@ -10,13 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.bookstoreapp.ui.main_screen.add_book_screen.BookItem
+import com.example.bookstoreapp.ui.navigation.BookDetails
 import com.example.domain.models.Book
 
 @Composable
 fun FavoritesContent(
     books: List<Book>,
-    onFavoriteClick: (Book) -> Unit
+    onFavoriteClick: (Book) -> Unit,
+    navController: NavController
 ) {
     val favoriteBooks = books.filter { it.isFavorite }
 
@@ -37,6 +40,9 @@ fun FavoritesContent(
                     book = book,
                     onFavoriteClick = {
                         onFavoriteClick(book)
+                    },
+                    onBookClick = {
+                        navController.navigate(BookDetails(bookId = book.id))
                     }
                 )
             }

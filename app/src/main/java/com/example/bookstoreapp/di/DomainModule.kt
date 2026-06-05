@@ -8,6 +8,7 @@ import com.example.domain.usecase.SignInUseCase
 import com.example.domain.usecase.SignUpUseCase
 import org.koin.dsl.module
 import com.example.domain.usecase.SaveBookUseCase
+import com.example.domain.usecase.SignOutUseCase
 
 
 val domainModule = module {
@@ -45,5 +46,11 @@ val domainModule = module {
 
     factory<RemoveBookFromFavoritesUseCase>{
         RemoveBookFromFavoritesUseCase(bookRepository = get())
+    }
+
+    factory<SignOutUseCase>{
+        SignOutUseCase(
+            userRepository = get()
+        )
     }
 }

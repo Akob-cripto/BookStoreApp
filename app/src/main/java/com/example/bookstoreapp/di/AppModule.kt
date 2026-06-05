@@ -19,7 +19,8 @@ val appModule = module {
             getBooksUseCase = get(),
             saveBookUseCase = get(),
             removeBookFromFavoritesUseCase = get(),
-            addBookToFavoritesUseCase = get()
+            addBookToFavoritesUseCase = get(),
+            signOutUseCase = get()
         )
     }
 }

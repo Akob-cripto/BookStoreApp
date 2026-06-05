@@ -13,4 +13,9 @@ data class Main(
 )
 
 @Serializable
+data class BookDetails(
+    val bookId: String
+)
+
+@Serializable
 object AddBook

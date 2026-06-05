@@ -77,5 +77,9 @@ class FireBaseStorage(
         }
     }
 
+    override fun signOut() {
+        auth.signOut()
+    }
+
 
 }

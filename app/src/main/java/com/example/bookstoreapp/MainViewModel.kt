@@ -17,6 +17,7 @@ import com.example.domain.usecase.GetBooksUseCase
 import com.example.domain.usecase.RemoveBookFromFavoritesUseCase
 import com.example.domain.usecase.SaveBookUseCase
 import com.example.domain.usecase.SignInUseCase
+import com.example.domain.usecase.SignOutUseCase
 import com.example.domain.usecase.SignUpUseCase
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
@@ -34,7 +35,8 @@ class MainViewModel(
     private val getBooksUseCase: GetBooksUseCase,
     private val saveBookUseCase: SaveBookUseCase,
     private val removeBookFromFavoritesUseCase: RemoveBookFromFavoritesUseCase,
-    private val addBookToFavoritesUseCase: AddBookToFavoritesUseCase
+    private val addBookToFavoritesUseCase: AddBookToFavoritesUseCase,
+    private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
     private val signInResultLiveMutable = MutableLiveData<SignInResult?>(null)
@@ -81,7 +83,8 @@ class MainViewModel(
         imageUri: String,
         title: String,
         description: String,
-        author: String
+        author: String,
+        price: Double
     ) {
         viewModelScope.launch {
             _mainUiState.value = _mainUiState.value.copy(
@@ -96,7 +99,8 @@ class MainViewModel(
                     imageUri = imageUri,
                     title = title,
                     description = description,
-                    author = author
+                    author = author,
+                    price = price
                 )
 
                 val result = withContext(Dispatchers.IO) {
@@ -178,5 +182,16 @@ class MainViewModel(
                 loadBooks()
             }
         }
+    }
+
+    fun signOut() {
+        signOutUseCase.execute()
+
+        _mainUiState.value = _mainUiState.value.copy(
+            isAdmin = false,
+            books = emptyList(),
+            error = null,
+            isLoading = false
+        )
     }
 }

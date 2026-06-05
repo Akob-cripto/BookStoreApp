@@ -41,6 +41,10 @@ class UserRepositoryImpl(private val fire: UserStorage) : UserRepository {
         return fire.isAdminFirebase()
     }
 
+    override fun signOut() {
+        fire.signOut()
+    }
+
     fun fromSignParamToDataUserRequest(user: SignParam): DataAuthRequest {
         return DataAuthRequest(email = user.email, password = user.password)
     }

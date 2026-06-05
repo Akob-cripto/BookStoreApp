@@ -21,7 +21,7 @@ sealed class BottomMenuItem(
 
     object Settings : BottomMenuItem(
         route = "",
-        title = "Settiongs",
+        title = "Settings",
         iconId = R.drawable.ic_settings
     )
 }

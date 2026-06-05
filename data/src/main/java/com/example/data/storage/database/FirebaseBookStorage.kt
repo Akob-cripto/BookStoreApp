@@ -57,7 +57,8 @@ class FirebaseBookStorage(
                         "author" to book.author,
                         "description" to book.description,
                         "category" to book.category,
-                        "imageUri" to book.imageUri
+                        "imageUri" to book.imageUri,
+                        "price" to book.price
                     )
                 )
                 .await()

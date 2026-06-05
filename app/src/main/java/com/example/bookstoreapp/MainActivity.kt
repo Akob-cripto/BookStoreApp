@@ -11,7 +11,9 @@ import androidx.navigation.toRoute
 import com.example.bookstoreapp.ui.LoginScreen
 import com.example.bookstoreapp.ui.main_screen.MainScreen
 import com.example.bookstoreapp.ui.main_screen.add_book_screen.AddBookScreen
+import com.example.bookstoreapp.ui.main_screen.book_details_screen.BookDetailsScreen
 import com.example.bookstoreapp.ui.navigation.AddBook
+import com.example.bookstoreapp.ui.navigation.BookDetails
 import com.example.bookstoreapp.ui.navigation.Login
 import com.example.bookstoreapp.ui.navigation.Main
 import org.koin.androidx.compose.koinViewModel
@@ -49,6 +51,16 @@ class MainActivity : ComponentActivity() {
                     AddBookScreen(
                         navController,
                         vm)
+                }
+
+                composable<BookDetails> { backStackEntry ->
+                    val route = backStackEntry.toRoute<BookDetails>()
+
+                    BookDetailsScreen(
+                        bookId = route.bookId,
+                        navController = navController,
+                        vm = vm
+                    )
                 }
             }
         }

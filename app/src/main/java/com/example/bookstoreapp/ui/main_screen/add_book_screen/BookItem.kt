@@ -1,7 +1,7 @@
 package com.example.bookstoreapp.ui.main_screen.add_book_screen
 
-import android.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,12 +19,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,12 +35,16 @@ import com.example.domain.models.Book
 fun BookItem(
     book: Book,
     modifier: Modifier = Modifier,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    onBookClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable {
+                onBookClick()
+            },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFF3EDF7)
@@ -91,7 +91,8 @@ fun BookItem(
                     text = if (book.author.isBlank()) "Unknown author" else book.author,
                     fontSize = 14.sp,
                     color = Color.Gray,
-                    maxLines = 1
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -112,21 +113,35 @@ fun BookItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${book.price.toInt()} ₽",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1B3A4B)
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    IconButton(onClick = onFavoriteClick) {
+                        Icon(
+                            imageVector = if (book.isFavorite) {
+                                Icons.Default.Favorite
+                            } else {
+                                Icons.Default.FavoriteBorder
+                            },
+                            contentDescription = "Favorite",
+                            tint = if (book.isFavorite) Color.Red else Color.Gray
+                        )
+                    }
+                }
             }
-
-            IconButton(onClick = onFavoriteClick) {
-                Icon(
-                    imageVector = if (book.isFavorite) {
-                        Icons.Default.Favorite
-                    } else {
-                        Icons.Default.FavoriteBorder
-                    },
-                    contentDescription = "Favorite",
-                    tint = if (book.isFavorite) Color.Red else Color.Gray
-                )
-            }
-
-
         }
     }
 }

@@ -14,13 +14,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.bookstoreapp.ui.main_screen.add_book_screen.BookItem
+import com.example.bookstoreapp.ui.navigation.BookDetails
 import com.example.domain.models.Book
 
 @Composable
 fun BooksContent(
     books: List<Book>,
-    onFavoriteClick: (Book) -> Unit
+    onFavoriteClick: (Book) -> Unit,
+    navController: NavController
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -52,6 +55,9 @@ fun BooksContent(
                     book = book,
                     onFavoriteClick = {
                         onFavoriteClick(book)
+                    },
+                    onBookClick = {
+                        navController.navigate(BookDetails(bookId = book.id))
                     }
                 )
             }
