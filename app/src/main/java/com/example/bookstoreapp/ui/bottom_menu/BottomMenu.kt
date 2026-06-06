@@ -15,6 +15,7 @@ fun BottomMenu(
     val items = listOf(
         BottomMenuItem.Home,
         BottomMenuItem.Favs,
+        BottomMenuItem.Cart,
         BottomMenuItem.Settings
     )
 
@@ -25,6 +26,7 @@ fun BottomMenu(
                 BottomMenuItem.Home -> BottomScreen.Books
                 BottomMenuItem.Favs -> BottomScreen.Favorites
                 BottomMenuItem.Settings -> BottomScreen.Profile
+                BottomMenuItem.Cart -> BottomScreen.Cart
             }
 
             NavigationBarItem(

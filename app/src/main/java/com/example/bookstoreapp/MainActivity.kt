@@ -51,7 +51,8 @@ class MainActivity : ComponentActivity() {
                 composable<AddBook>() {
                     AddBookScreen(
                         navController,
-                        vm)
+                        vm
+                    )
                 }
 
                 composable<BookDetails> { backStackEntry ->

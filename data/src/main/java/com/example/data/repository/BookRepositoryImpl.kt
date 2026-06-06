@@ -20,7 +20,8 @@ class BookRepositoryImpl(
                 description = dataBook.description,
                 category = dataBook.category,
                 imageUri = dataBook.imageUri,
-                isFavorite = dataBook.isFavorite
+                isFavorite = dataBook.isFavorite,
+                price = dataBook.price
             )
         }
     }

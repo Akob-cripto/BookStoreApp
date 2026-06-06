@@ -169,7 +169,7 @@ fun AddBookScreen(navController: NavController,
                 Log.d("MyLog", "Некорректная цена")
                 return@CustomButton
             }
-
+            Log.d("MyLog", "price ${price.value}")
             vm.saveBook(
                 category = selectedCategory.value,
                 imageUri = selectedImageUri.value.toString(),

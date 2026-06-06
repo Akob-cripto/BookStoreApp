@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.bookstoreapp.navigation.Login
 import com.example.bookstoreapp.ui.books.BooksContent
+import com.example.bookstoreapp.ui.cart.CartContent
 import com.example.bookstoreapp.ui.drawer.DrawerBody
 import com.example.bookstoreapp.ui.drawer.DrawerHeader
 import com.example.bookstoreapp.ui.favorites.FavoritesContent
@@ -105,6 +106,19 @@ fun MainScreen(
 
                     else -> {
                         when (selectedScreen) {
+                            BottomScreen.Cart -> {
+                                CartContent(
+                                    books = mainUiState.value.books,
+                                    cartBookIds = mainUiState.value.cartBookIds,
+                                    onRemoveFromCartClick = { book ->
+                                        vm.removeBookFromCart(book.id)
+                                    },
+                                    onCheckoutClick = {
+                                        // позже здесь будет оформление заказа
+                                    }
+                                )
+                            }
+
                             BottomScreen.Books -> {
                                 val filteredBooks =
                                     if (selectedCategory == null || selectedCategory == "All") {

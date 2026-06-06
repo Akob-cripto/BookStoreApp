@@ -9,7 +9,7 @@ import kotlinx.coroutines.tasks.await
 
 class FirebaseBookStorage(
     private val firestore: FirebaseFirestore,
-    val auth: FirebaseAuth
+    private val auth: FirebaseAuth
 ) : BookStorage {
 
     override suspend fun getBooks(): List<DataBook> {
@@ -42,7 +42,8 @@ class FirebaseBookStorage(
                 description = doc.getString("description") ?: "",
                 category = doc.getString("category") ?: "",
                 imageUri = doc.getString("imageUri") ?: "",
-                isFavorite = favoriteIds.contains(doc.id)
+                isFavorite = favoriteIds.contains(doc.id),
+                price = doc.getDouble("price") ?: 0.0
             )
         }
     }

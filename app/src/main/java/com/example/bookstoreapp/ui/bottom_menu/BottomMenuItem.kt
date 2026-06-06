@@ -24,4 +24,10 @@ sealed class BottomMenuItem(
         title = "Settings",
         iconId = R.drawable.ic_settings
     )
+
+    object Cart: BottomMenuItem(
+        route = "",
+        title = "Cart",
+        iconId = R.drawable.outline_add_shopping_cart_24
+    )
 }
