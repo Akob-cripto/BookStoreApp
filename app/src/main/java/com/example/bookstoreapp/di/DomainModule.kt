@@ -1,8 +1,11 @@
 package com.example.bookstoreapp.di
 
+import com.example.domain.usecase.AddBookToCartUseCase
 import com.example.domain.usecase.AddBookToFavoritesUseCase
 import com.example.domain.usecase.CheckIsAdminUseCase
 import com.example.domain.usecase.GetBooksUseCase
+import com.example.domain.usecase.GetCartBookIdsUseCase
+import com.example.domain.usecase.RemoveBookFromCartUseCase
 import com.example.domain.usecase.RemoveBookFromFavoritesUseCase
 import com.example.domain.usecase.SignInUseCase
 import com.example.domain.usecase.SignUpUseCase
@@ -51,6 +54,24 @@ val domainModule = module {
     factory<SignOutUseCase>{
         SignOutUseCase(
             userRepository = get()
+        )
+    }
+
+    factory<AddBookToCartUseCase>{
+        AddBookToCartUseCase(
+            cartRepository = get()
+        )
+    }
+
+    factory<GetCartBookIdsUseCase>{
+        GetCartBookIdsUseCase(
+            cartRepository = get()
+        )
+    }
+
+    factory<RemoveBookFromCartUseCase>{
+        RemoveBookFromCartUseCase(
+            cartRepository = get()
         )
     }
 }

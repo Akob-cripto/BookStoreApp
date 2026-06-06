@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen
+package com.example.bookstoreapp.ui.favorites
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.bookstoreapp.ui.main_screen.add_book_screen.BookItem
-import com.example.bookstoreapp.ui.navigation.BookDetails
+import com.example.bookstoreapp.ui.books.BookItem
+import com.example.bookstoreapp.navigation.BookDetails
 import com.example.domain.models.Book
 
 @Composable

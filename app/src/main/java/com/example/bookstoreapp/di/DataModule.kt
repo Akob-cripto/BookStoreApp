@@ -1,12 +1,16 @@
 package com.example.bookstoreapp.di
 
 import com.example.data.repository.BookRepositoryImpl
+import com.example.data.repository.CartRepositoryImpl
 import com.example.data.repository.UserRepositoryImpl
 import com.example.data.storage.BookStorage
+import com.example.data.storage.CartStorage
 import com.example.data.storage.UserStorage
 import com.example.data.storage.database.FireBaseStorage
 import com.example.data.storage.database.FirebaseBookStorage
+import com.example.data.storage.database.FirebaseCartStorage
 import com.example.domain.repositories.BookRepository
+import com.example.domain.repositories.CartRepository
 import com.example.domain.repositories.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,6 +44,17 @@ val dataModule = module {
 
     single<BookRepository> {
         BookRepositoryImpl(bookStorage = get())
+    }
+
+    single<CartRepository>{
+        CartRepositoryImpl(cartStorage = get())
+    }
+
+    single<CartStorage>{
+        FirebaseCartStorage(
+            firestore = get(),
+            auth = get()
+        )
     }
 
 }

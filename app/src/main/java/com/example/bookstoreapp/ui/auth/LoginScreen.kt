@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui
+package com.example.bookstoreapp.ui.auth
 
 
 import android.widget.Toast
@@ -32,9 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.bookstoreapp.MainViewModel
+import com.example.bookstoreapp.ui.main_screen.MainViewModel
 import com.example.bookstoreapp.R
-import com.example.bookstoreapp.ui.navigation.Main
+import com.example.bookstoreapp.navigation.Login
+import com.example.bookstoreapp.navigation.Main
+import com.example.bookstoreapp.ui.components.CustomButton
+import com.example.bookstoreapp.ui.components.RoundedCornerTextField
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
@@ -61,9 +64,19 @@ fun LoginScreen(navController: NavController) {
     LaunchedEffect(signInResult) {
         when (val result = signInResult) {
             is SignInResult.Success -> {
-                navController.navigate(Main(email = result.user.email, userId = result.user.userId))
+                navController.navigate(
+                    Main(
+                        email = result.user.email,
+                        userId = result.user.userId
+                    )
+                ) {
+                    popUpTo(Login) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+
                 vm.clearSignInResult()
-                vm.checkIsAdmin()
             }
 
             is SignInResult.ValidationError -> {
@@ -146,7 +159,7 @@ fun LoginScreen(navController: NavController) {
         RoundedCornerTextField(
             text = emailState.value,
             label = "Email"
-        ) {newText ->
+        ) { newText ->
             emailState.value = newText
         }
 
@@ -156,17 +169,17 @@ fun LoginScreen(navController: NavController) {
         RoundedCornerTextField(
             text = passwordState.value,
             label = "Password"
-        ) {newText ->
+        ) { newText ->
             passwordState.value = newText
         }
 
 
         CustomButton(text = "Sign In") {
-                vm.signIn(email = emailState.value, password = passwordState.value)
+            vm.signIn(email = emailState.value, password = passwordState.value)
         }
 
         CustomButton(text = "Sign Up") {
-                vm.signUp(email = emailState.value, password = passwordState.value)
+            vm.signUp(email = emailState.value, password = passwordState.value)
         }
 
 

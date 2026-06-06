@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen.add_book_screen
+package com.example.bookstoreapp.ui.books
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

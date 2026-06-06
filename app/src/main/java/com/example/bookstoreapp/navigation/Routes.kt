@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.navigation
+package com.example.bookstoreapp.navigation
 
 import kotlinx.serialization.Serializable
 

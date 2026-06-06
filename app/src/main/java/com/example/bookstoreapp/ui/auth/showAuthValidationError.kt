@@ -1,10 +1,9 @@
-package com.example.bookstoreapp.ui
+package com.example.bookstoreapp.ui.auth
 
 
 import android.content.Context
 import android.widget.Toast
 import com.example.domain.validation.AuthValidationError
-import com.google.rpc.context.AttributeContext
 
 fun showAuthValidationError(error: AuthValidationError, context: Context) {
      val message = when(error){

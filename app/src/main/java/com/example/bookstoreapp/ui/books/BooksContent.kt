@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen
+package com.example.bookstoreapp.ui.books
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.bookstoreapp.ui.main_screen.add_book_screen.BookItem
-import com.example.bookstoreapp.ui.navigation.BookDetails
+import com.example.bookstoreapp.navigation.BookDetails
 import com.example.domain.models.Book
 
 @Composable

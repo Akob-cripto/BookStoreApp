@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen
+package com.example.bookstoreapp.ui.profile
 
 
 import androidx.compose.foundation.background

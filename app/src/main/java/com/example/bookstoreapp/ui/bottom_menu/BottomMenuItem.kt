@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen.buttiom_menu
+package com.example.bookstoreapp.ui.bottom_menu
 
 import com.example.bookstoreapp.R
 

@@ -1,19 +1,20 @@
-package com.example.bookstoreapp
+package com.example.bookstoreapp.ui.main_screen
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.bookstoreapp.models.MainUiState
-import com.example.domain.models.AuthUser
+import com.example.bookstoreapp.ui.main_screen.MainUiState
 import com.example.domain.models.Book
 import com.example.domain.models.NewBookParam
 import com.example.domain.models.SignParam
+import com.example.domain.usecase.AddBookToCartUseCase
 import com.example.domain.usecase.AddBookToFavoritesUseCase
 import com.example.domain.usecase.CheckIsAdminUseCase
 import com.example.domain.usecase.GetBooksUseCase
+import com.example.domain.usecase.GetCartBookIdsUseCase
+import com.example.domain.usecase.RemoveBookFromCartUseCase
 import com.example.domain.usecase.RemoveBookFromFavoritesUseCase
 import com.example.domain.usecase.SaveBookUseCase
 import com.example.domain.usecase.SignInUseCase
@@ -26,7 +27,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.String
 
 class MainViewModel(
     private val signInUseCase: SignInUseCase,
@@ -36,8 +36,13 @@ class MainViewModel(
     private val saveBookUseCase: SaveBookUseCase,
     private val removeBookFromFavoritesUseCase: RemoveBookFromFavoritesUseCase,
     private val addBookToFavoritesUseCase: AddBookToFavoritesUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val signOutUseCase: SignOutUseCase,
+    private val addBookToCartUseCase: AddBookToCartUseCase,
+    private val removeBookFromCartUseCase: RemoveBookFromCartUseCase,
+    private val getCartBookIdsUseCase: GetCartBookIdsUseCase
 ) : ViewModel() {
+
+    val cartBookIds: List<String> = emptyList()
 
     private val signInResultLiveMutable = MutableLiveData<SignInResult?>(null)
     private val signUpResultLiveMutable = MutableLiveData<SignUpResult?>(null)
@@ -49,11 +54,6 @@ class MainViewModel(
 
     private val _mainUiState = MutableStateFlow(MainUiState())
     val mainUiState = _mainUiState.asStateFlow()
-
-
-    init {
-        loadBooks()
-    }
 
     fun loadBooks() {
         viewModelScope.launch {
@@ -159,6 +159,73 @@ class MainViewModel(
             _mainUiState.value = _mainUiState.value.copy(
                 isAdmin = result
             )
+        }
+    }
+
+    fun loadCart() {
+        viewModelScope.launch {
+            try {
+                val cartBookIds = getCartBookIdsUseCase.execute()
+
+                _mainUiState.value = _mainUiState.value.copy(
+                    cartBookIds = cartBookIds
+                )
+            } catch (e: Exception) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = e.message ?: "Ошибка загрузки корзины"
+                )
+            }
+        }
+    }
+
+    fun addBookToCart(bookId: String) {
+        viewModelScope.launch {
+            try {
+                val result = addBookToCartUseCase.execute(bookId)
+
+                if (result) {
+                    loadCart()
+                } else {
+                    _mainUiState.value = _mainUiState.value.copy(
+                        error = "Не удалось добавить книгу в корзину"
+                    )
+                }
+            } catch (e: Exception) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = e.message ?: "Ошибка добавления книги в корзину"
+                )
+            }
+        }
+    }
+
+    fun removeBookFromCart(bookId: String) {
+        viewModelScope.launch {
+            try {
+                val result = removeBookFromCartUseCase.execute(bookId)
+
+                if (result) {
+                    loadCart()
+                } else {
+                    _mainUiState.value = _mainUiState.value.copy(
+                        error = "Не удалось удалить книгу из корзины"
+                    )
+                }
+            } catch (e: Exception) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = e.message ?: "Ошибка удаления книги из корзины"
+                )
+            }
+        }
+    }
+
+
+    fun onCartClick(bookId: String) {
+        val isInCart = _mainUiState.value.cartBookIds.contains(bookId)
+
+        if (isInCart) {
+            removeBookFromCart(bookId)
+        } else {
+            addBookToCart(bookId)
         }
     }
 

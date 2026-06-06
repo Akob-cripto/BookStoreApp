@@ -1,6 +1,5 @@
 package com.example.bookstoreapp.ui.main_screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.bookstoreapp.MainViewModel
-import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomMenu
-import com.example.bookstoreapp.ui.main_screen.buttiom_menu.BottomScreen
+import com.example.bookstoreapp.ui.main_screen.MainViewModel
+import com.example.bookstoreapp.ui.bottom_menu.BottomMenu
+import com.example.bookstoreapp.ui.bottom_menu.BottomScreen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.example.bookstoreapp.ui.navigation.Login
+import com.example.bookstoreapp.navigation.Login
+import com.example.bookstoreapp.ui.books.BooksContent
+import com.example.bookstoreapp.ui.drawer.DrawerBody
+import com.example.bookstoreapp.ui.drawer.DrawerHeader
+import com.example.bookstoreapp.ui.favorites.FavoritesContent
+import com.example.bookstoreapp.ui.profile.ProfileContent
 
 @Composable
 fun MainScreen(
@@ -50,6 +54,7 @@ fun MainScreen(
     LaunchedEffect(userId) {
         vm.checkIsAdmin()
         vm.loadBooks()
+        vm.loadCart()
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen.book_details_screen
+package com.example.bookstoreapp.ui.books.book_details_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.bookstoreapp.MainViewModel
+import com.example.bookstoreapp.ui.main_screen.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +35,13 @@ fun BookDetailsScreen(
     val uiState by vm.mainUiState.collectAsStateWithLifecycle()
 
     val book = uiState.books.find { it.id == bookId }
+
+    if (book == null) {
+        Text("Book not found")
+        return
+    }
+
+    val isInCart = uiState.cartBookIds.contains(book.id)
 
     Scaffold(
         topBar = {
@@ -191,6 +198,21 @@ fun BookDetailsScreen(
                         lineHeight = 24.sp,
                         color = Color.DarkGray
                     )
+
+                    Button(
+                        onClick = {
+                            vm.onCartClick(book.id)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = if (isInCart) {
+                                "Remove from cart"
+                            } else {
+                                "Add to cart"
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen.add_book_screen
+package com.example.bookstoreapp.ui.admin.add_book_screen
 
 import android.net.Uri
 import android.util.Log
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -34,14 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.bookstoreapp.MainViewModel
+import com.example.bookstoreapp.ui.main_screen.MainViewModel
 import com.example.bookstoreapp.R
-import com.example.bookstoreapp.ui.CustomButton
-import com.example.bookstoreapp.ui.RoundedCornerTextField
-import com.example.bookstoreapp.ui.main_screen.MainScreen
-import com.example.bookstoreapp.ui.navigation.Main
+import com.example.bookstoreapp.ui.components.CustomButton
+import com.example.bookstoreapp.ui.components.RoundedCornerTextField
 import com.example.bookstoreapp.ui.theme.BoxFilterColor
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddBookScreen(navController: NavController,

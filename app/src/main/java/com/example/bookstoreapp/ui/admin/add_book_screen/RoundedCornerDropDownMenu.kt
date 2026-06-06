@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen.add_book_screen
+package com.example.bookstoreapp.ui.admin.add_book_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

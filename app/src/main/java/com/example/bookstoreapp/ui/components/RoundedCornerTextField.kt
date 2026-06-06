@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui
+package com.example.bookstoreapp.ui.components
 
 
 import androidx.compose.foundation.border

@@ -1,4 +1,4 @@
-package com.example.bookstoreapp.ui.main_screen
+package com.example.bookstoreapp.ui.drawer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.bookstoreapp.R
-import com.example.bookstoreapp.ui.navigation.AddBook
+import com.example.bookstoreapp.navigation.AddBook
 import com.example.bookstoreapp.ui.theme.DarkBlue
 import com.example.bookstoreapp.ui.theme.DarkTransparentBlue
 import com.example.bookstoreapp.ui.theme.GrayLight
