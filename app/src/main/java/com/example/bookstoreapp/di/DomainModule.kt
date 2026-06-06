@@ -3,6 +3,7 @@ package com.example.bookstoreapp.di
 import com.example.domain.usecase.AddBookToCartUseCase
 import com.example.domain.usecase.AddBookToFavoritesUseCase
 import com.example.domain.usecase.CheckIsAdminUseCase
+import com.example.domain.usecase.CreateOrderUseCase
 import com.example.domain.usecase.GetBooksUseCase
 import com.example.domain.usecase.GetCartBookIdsUseCase
 import com.example.domain.usecase.RemoveBookFromCartUseCase
@@ -73,5 +74,10 @@ val domainModule = module {
         RemoveBookFromCartUseCase(
             cartRepository = get()
         )
+    }
+
+
+    factory {
+        CreateOrderUseCase(orderRepository = get())
     }
 }

@@ -114,7 +114,7 @@ fun MainScreen(
                                         vm.removeBookFromCart(book.id)
                                     },
                                     onCheckoutClick = {
-                                        // позже здесь будет оформление заказа
+                                        vm.checkout(email)
                                     }
                                 )
                             }

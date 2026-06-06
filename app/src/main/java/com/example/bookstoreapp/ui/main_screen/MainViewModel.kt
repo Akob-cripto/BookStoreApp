@@ -8,10 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.bookstoreapp.ui.main_screen.MainUiState
 import com.example.domain.models.Book
 import com.example.domain.models.NewBookParam
+import com.example.domain.models.NewOrderParam
 import com.example.domain.models.SignParam
 import com.example.domain.usecase.AddBookToCartUseCase
 import com.example.domain.usecase.AddBookToFavoritesUseCase
 import com.example.domain.usecase.CheckIsAdminUseCase
+import com.example.domain.usecase.CreateOrderUseCase
 import com.example.domain.usecase.GetBooksUseCase
 import com.example.domain.usecase.GetCartBookIdsUseCase
 import com.example.domain.usecase.RemoveBookFromCartUseCase
@@ -39,7 +41,8 @@ class MainViewModel(
     private val signOutUseCase: SignOutUseCase,
     private val addBookToCartUseCase: AddBookToCartUseCase,
     private val removeBookFromCartUseCase: RemoveBookFromCartUseCase,
-    private val getCartBookIdsUseCase: GetCartBookIdsUseCase
+    private val getCartBookIdsUseCase: GetCartBookIdsUseCase,
+    private val createOrderUseCase: CreateOrderUseCase
 ) : ViewModel() {
 
     val cartBookIds: List<String> = emptyList()
@@ -260,5 +263,45 @@ class MainViewModel(
             error = null,
             isLoading = false
         )
+    }
+
+
+    fun checkout(userEmail: String) {
+        viewModelScope.launch {
+            val cartBookIds = _mainUiState.value.cartBookIds
+
+            if (cartBookIds.isEmpty()) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = "Корзина пустая"
+                )
+                return@launch
+            }
+
+            val cartBooks = _mainUiState.value.books.filter { book ->
+                cartBookIds.contains(book.id)
+            }
+
+            val totalPrice = cartBooks.sumOf { it.price }
+
+            val order = NewOrderParam(
+                userEmail = userEmail,
+                bookIds = cartBookIds,
+                totalPrice = totalPrice
+            )
+
+            val result = createOrderUseCase.execute(order)
+
+            if (result) {
+                cartBookIds.forEach { bookId ->
+                    removeBookFromCartUseCase.execute(bookId)
+                }
+
+                loadCart()
+            } else {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = "Не удалось оформить заказ"
+                )
+            }
+        }
     }
 }
