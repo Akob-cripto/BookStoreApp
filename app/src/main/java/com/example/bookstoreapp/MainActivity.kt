@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -57,11 +59,24 @@ class MainActivity : ComponentActivity() {
 
                 composable<BookDetails> { backStackEntry ->
                     val route = backStackEntry.toRoute<BookDetails>()
+                    val uiState by vm.mainUiState.collectAsStateWithLifecycle()
+
+                    val book = uiState.books.find { it.id == route.bookId }
 
                     BookDetailsScreen(
-                        bookId = route.bookId,
-                        navController = navController,
-                        vm = vm
+                        book = book,
+                        isInCart = uiState.cartBookIds.contains(route.bookId),
+                        onBackClick = {
+                            navController.popBackStack()
+                        },
+                        onFavoriteClick = {
+                            book?.let {
+                                vm.onFavoriteClick(it)
+                            }
+                        },
+                        onCartClick = {
+                            vm.onCartClick(route.bookId)
+                        }
                     )
                 }
             }

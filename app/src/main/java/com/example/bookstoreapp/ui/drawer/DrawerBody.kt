@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -43,90 +45,96 @@ fun DrawerBody(
         listOf("All", "Favorite", "Fantasy", "Drama", "Bestsellers")
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBlue)
+            .padding(horizontal = 18.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bg_bookstore_login),
-            contentDescription = "",
-            modifier = Modifier.fillMaxSize(),
-            alpha = 0.3f,
-            contentScale = ContentScale.Crop
+        Text(
+            text = "Categories",
+            color = Color.White.copy(alpha = 0.75f),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        categoriesList.forEach { item ->
+            val isSelected =
+                selectedCategory == item || (selectedCategory == null && item == "All")
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Categories",
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
+            CategoryDrawerItem(
+                title = item,
+                isSelected = isSelected,
+                onClick = {
+                    onCategoryClick(
+                        if (item == "All") null else item
+                    )
+                }
             )
+
             Spacer(modifier = Modifier.height(10.dp))
+        }
 
+        Spacer(modifier = Modifier.weight(1f))
 
-            Box(
+        if (isAdmin) {
+            Button(
+                onClick = {
+                    navController.navigate(AddBook)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GrayLight)
-            )
-
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(bottom = 28.dp),
+                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFDF7EF),
+                    contentColor = Color(0xFF1B3A4B)
+                )
             ) {
-                items(categoriesList) { item ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onCategoryClick(item)
-                            }
-                    ) {
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = item,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(GrayLight)
-                        )
-                    }
-                }
-            }
-
-            if (isAdmin) {
-                Button(
-                    onClick = {
-                        navController.navigate(AddBook)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = DarkTransparentBlue
-                    )
-                ) {
-                    Text(text = "Admin panel")
-                }
+                Text(
+                    text = "Admin panel",
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
+    }
+}
+
+
+@Composable
+fun CategoryDrawerItem(
+    title: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val backgroundColor = if (isSelected) {
+        Color(0xFFFDF7EF)
+    } else {
+        Color.White.copy(alpha = 0.08f)
+    }
+
+    val textColor = if (isSelected) {
+        Color(0xFF1B3A4B)
+    } else {
+        Color.White
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(backgroundColor)
+            .clickable {
+                onClick()
+            }
+            .padding(vertical = 14.dp, horizontal = 18.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Text(
+            text = title,
+            color = textColor,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

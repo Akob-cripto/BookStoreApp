@@ -1,10 +1,14 @@
 package com.example.bookstoreapp.ui.main_screen
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -23,7 +27,13 @@ import com.example.bookstoreapp.ui.main_screen.MainViewModel
 import com.example.bookstoreapp.ui.bottom_menu.BottomMenu
 import com.example.bookstoreapp.ui.bottom_menu.BottomScreen
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.bookstoreapp.R
 import com.example.bookstoreapp.navigation.Login
 import com.example.bookstoreapp.ui.books.BooksContent
 import com.example.bookstoreapp.ui.cart.CartContent
@@ -33,6 +43,7 @@ import com.example.bookstoreapp.ui.favorites.FavoritesContent
 import com.example.bookstoreapp.ui.orders.OrdersContent
 import com.example.bookstoreapp.ui.profile.ProfileContent
 import com.example.domain.models.Order
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -46,7 +57,8 @@ fun MainScreen(
         mutableStateOf("")
     }
 
-    val drawerState = rememberDrawerState(DrawerValue.Open)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     var selectedScreen by remember {
         mutableStateOf(BottomScreen.Books)
@@ -70,20 +82,45 @@ fun MainScreen(
         modifier = Modifier.fillMaxWidth(),
         drawerState = drawerState,
         drawerContent = {
-            Column(modifier = Modifier.fillMaxWidth(0.7f)) {
-                DrawerHeader(email)
-                DrawerBody(
-                    navController = navController,
-                    selectedCategory,
-                    mainUiState.value.isAdmin
-                ) { category ->
-                    selectedCategory = category
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(280.dp)
+                    .background(Color(0xFF102A38))
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.bg_bookstore_login),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    alpha = 0.18f,
+                    contentScale = ContentScale.Crop
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xCC102A38))
+                )
+
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    DrawerHeader(email)
+
+                    DrawerBody(
+                        navController = navController,
+                        selectedCategory = selectedCategory,
+                        isAdmin = mainUiState.value.isAdmin
+                    ) { category ->
+                        selectedCategory = category
+                    }
                 }
             }
         }
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
+            containerColor = Color(0xFFFAF7F2),
             bottomBar = {
                 BottomMenu(
                     selectedScreen = selectedScreen,
@@ -152,6 +189,11 @@ fun MainScreen(
                                     searchQuery = searchQuery,
                                     onSearchQueryChange = { newText ->
                                         searchQuery = newText
+                                    },
+                                    onMenuClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
                                     },
                                     onFavoriteClick = { book ->
                                         vm.onFavoriteClick(book)

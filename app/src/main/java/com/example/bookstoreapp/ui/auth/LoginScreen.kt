@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +41,6 @@ import com.example.bookstoreapp.navigation.Login
 import com.example.bookstoreapp.navigation.Main
 import com.example.bookstoreapp.ui.components.CustomButton
 import com.example.bookstoreapp.ui.components.RoundedCornerTextField
-import com.example.bookstoreapp.ui.theme.BoxFilterColor
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
 import org.koin.androidx.compose.koinViewModel
@@ -116,72 +118,122 @@ fun LoginScreen(navController: NavController) {
         }
     }
 
-    Image(
-        painter = painterResource(R.drawable.bg_bookstore_login),
-        contentDescription = "BG",
-        modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
-    )
-
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BoxFilterColor),
-    )
-
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize()
     ) {
-        Image(painter = painterResource(R.drawable.logo),
-            contentDescription = "Logo",
+        Image(
+            painter = painterResource(R.drawable.bg_bookstore_login),
+            contentDescription = "BG",
+            modifier = Modifier.fillMaxSize().background(Color.White, RoundedCornerShape(32.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        Box(
             modifier = Modifier
-                .size(200.dp)
-                .clip(RoundedCornerShape(50.dp))
+                .fillMaxSize()
+                .background(Color(0xCC0B2230))
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(32.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFDCCFC1).copy(alpha = 0.96f)
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 10.dp
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.logo),
+                        contentDescription = "Logo",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(RoundedCornerShape(34.dp))
+                    )
 
-        Text(text = "Akob Book Store",
-            color = Color.White,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif
-        )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "Akob Book Store",
+                        color = Color(0xFF1B3A4B),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Serif
+                    )
 
-        RoundedCornerTextField(
-            text = emailState.value,
-            label = "Email"
-        ) { newText ->
-            emailState.value = newText
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = "Welcome back, reader",
+                        color = Color.Gray,
+                        fontSize = 15.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(22.dp))
+
+                    RoundedCornerTextField(
+                        text = emailState.value,
+                        label = "Email"
+                    ) { newText ->
+                        emailState.value = newText
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    RoundedCornerTextField(
+                        text = passwordState.value,
+                        label = "Password",
+                        isPassword = true
+                    ) { newText ->
+                        passwordState.value = newText
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    CustomButton(
+                        text = "Sign In",
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = Color(0xFF1B3A4B)
+                    ) {
+                        vm.signIn(
+                            email = emailState.value,
+                            password = passwordState.value
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    androidx.compose.material3.OutlinedButton(
+                        onClick = {
+                            vm.signUp(
+                                email = emailState.value,
+                                password = passwordState.value
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(18.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF1B3A4B)
+                        )
+                    ) {
+                        Text(text = "Create account")
+                    }
+                }
+            }
         }
-
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        RoundedCornerTextField(
-            text = passwordState.value,
-            label = "Password"
-        ) { newText ->
-            passwordState.value = newText
-        }
-
-
-        CustomButton(text = "Sign In") {
-            vm.signIn(email = emailState.value, password = passwordState.value)
-        }
-
-        CustomButton(text = "Sign Up") {
-            vm.signUp(email = emailState.value, password = passwordState.value)
-        }
-
-
     }
 }
