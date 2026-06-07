@@ -41,6 +41,11 @@ fun MainScreen(
     navController: NavController,
     vm: MainViewModel
 ) {
+
+    var searchQuery by remember {
+        mutableStateOf("")
+    }
+
     val drawerState = rememberDrawerState(DrawerValue.Open)
 
     var selectedScreen by remember {
@@ -134,8 +139,20 @@ fun MainScreen(
                                         }
                                     }
 
+                                val searchedBooks = filteredBooks.filter { book ->
+                                    val query = searchQuery.trim()
+
+                                    query.isBlank() ||
+                                            book.title.contains(query, ignoreCase = true) ||
+                                            book.author.contains(query, ignoreCase = true)
+                                }
+
                                 BooksContent(
-                                    books = filteredBooks,
+                                    books = searchedBooks,
+                                    searchQuery = searchQuery,
+                                    onSearchQueryChange = { newText ->
+                                        searchQuery = newText
+                                    },
                                     onFavoriteClick = { book ->
                                         vm.onFavoriteClick(book)
                                     },
