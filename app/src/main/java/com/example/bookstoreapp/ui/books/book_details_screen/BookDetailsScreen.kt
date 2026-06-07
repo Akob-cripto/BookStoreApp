@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.bookstoreapp.ui.components.Base64Image
 import com.example.bookstoreapp.ui.main_screen.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,11 +106,10 @@ fun BookDetailsScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         if (book.imageUri.isNotBlank() && book.imageUri != "null") {
-                            AsyncImage(
-                                model = book.imageUri,
-                                contentDescription = book.title,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
+                            Base64Image(
+                                imageBase64 = book.imageUri,
+                                title = book.title,
+                                modifier = Modifier.fillMaxSize()
                             )
                         } else {
                             Text(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookstoreapp.ui.components.Base64Image
 import com.example.domain.models.Book
 
 @Composable
@@ -61,14 +63,11 @@ fun BookItem(
                 modifier = Modifier
                     .size(width = 82.dp, height = 110.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF1B3A4B)),
-                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = book.title.take(1).uppercase(),
-                    color = Color.White,
-                    fontSize = 34.sp,
-                    fontWeight = FontWeight.Bold
+                Base64Image(
+                    imageBase64 = book.imageUri,
+                    title = book.title,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 

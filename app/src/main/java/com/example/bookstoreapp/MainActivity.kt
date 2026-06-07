@@ -50,8 +50,8 @@ class MainActivity : ComponentActivity() {
 
                 composable<AddBook>() {
                     AddBookScreen(
-                        navController,
-                        vm
+                        vm,
+                        onBackClick = { navController.popBackStack() }
                     )
                 }
 
