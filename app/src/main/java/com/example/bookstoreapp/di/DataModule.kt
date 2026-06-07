@@ -73,5 +73,4 @@ val dataModule = module {
             orderStorage = get()
         )
     }
-
 }

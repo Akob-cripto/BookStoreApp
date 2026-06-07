@@ -5,5 +5,6 @@ enum class BottomScreen {
     Books,
     Favorites,
     Cart,
-    Profile
+    Profile,
+    Orders
 }

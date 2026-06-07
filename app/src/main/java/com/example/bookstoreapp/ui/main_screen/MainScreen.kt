@@ -30,7 +30,9 @@ import com.example.bookstoreapp.ui.cart.CartContent
 import com.example.bookstoreapp.ui.drawer.DrawerBody
 import com.example.bookstoreapp.ui.drawer.DrawerHeader
 import com.example.bookstoreapp.ui.favorites.FavoritesContent
+import com.example.bookstoreapp.ui.orders.OrdersContent
 import com.example.bookstoreapp.ui.profile.ProfileContent
+import com.example.domain.models.Order
 
 @Composable
 fun MainScreen(
@@ -154,6 +156,10 @@ fun MainScreen(
                             BottomScreen.Profile -> {
                                 ProfileContent(
                                     email = email,
+                                    onOrdersClick = {
+                                        vm.loadMyOrders()
+                                        selectedScreen = BottomScreen.Orders
+                                    },
                                     onLogoutClick = {
                                         vm.signOut()
 
@@ -162,6 +168,19 @@ fun MainScreen(
                                                 inclusive = true
                                             }
                                         }
+                                    }
+                                )
+                            }
+
+                            BottomScreen.Orders -> {
+                                OrdersContent(
+                                    orders = mainUiState.value.orders,
+                                    books = mainUiState.value.books,
+                                    onBackClick = {
+                                        selectedScreen = BottomScreen.Profile
+                                    },
+                                    onCancelOrderClick = { order: Order ->
+                                        vm.cancelOrder(order.id)
                                     }
                                 )
                             }

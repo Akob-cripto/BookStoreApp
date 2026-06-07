@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ProfileContent(
     email: String,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    onOrdersClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -66,6 +67,15 @@ fun ProfileContent(
                     value = email
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        OutlinedButton(
+            onClick = onOrdersClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "My orders")
         }
 
         Spacer(modifier = Modifier.height(24.dp))

@@ -10,18 +10,20 @@ import com.example.domain.models.Book
 import com.example.domain.models.NewBookParam
 import com.example.domain.models.NewOrderParam
 import com.example.domain.models.SignParam
-import com.example.domain.usecase.AddBookToCartUseCase
-import com.example.domain.usecase.AddBookToFavoritesUseCase
-import com.example.domain.usecase.CheckIsAdminUseCase
-import com.example.domain.usecase.CreateOrderUseCase
-import com.example.domain.usecase.GetBooksUseCase
-import com.example.domain.usecase.GetCartBookIdsUseCase
-import com.example.domain.usecase.RemoveBookFromCartUseCase
-import com.example.domain.usecase.RemoveBookFromFavoritesUseCase
-import com.example.domain.usecase.SaveBookUseCase
-import com.example.domain.usecase.SignInUseCase
-import com.example.domain.usecase.SignOutUseCase
-import com.example.domain.usecase.SignUpUseCase
+import com.example.domain.usecase.cart.AddBookToCartUseCase
+import com.example.domain.usecase.favorite.AddBookToFavoritesUseCase
+import com.example.domain.usecase.auth.CheckIsAdminUseCase
+import com.example.domain.usecase.order.CreateOrderUseCase
+import com.example.domain.usecase.book.GetBooksUseCase
+import com.example.domain.usecase.cart.GetCartBookIdsUseCase
+import com.example.domain.usecase.order.GetMyOrdersUseCase
+import com.example.domain.usecase.cart.RemoveBookFromCartUseCase
+import com.example.domain.usecase.favorite.RemoveBookFromFavoritesUseCase
+import com.example.domain.usecase.book.SaveBookUseCase
+import com.example.domain.usecase.auth.SignInUseCase
+import com.example.domain.usecase.auth.SignOutUseCase
+import com.example.domain.usecase.auth.SignUpUseCase
+import com.example.domain.usecase.order.CancelOrderUseCase
 import com.example.domain.validation.SignInResult
 import com.example.domain.validation.SignUpResult
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +44,9 @@ class MainViewModel(
     private val addBookToCartUseCase: AddBookToCartUseCase,
     private val removeBookFromCartUseCase: RemoveBookFromCartUseCase,
     private val getCartBookIdsUseCase: GetCartBookIdsUseCase,
-    private val createOrderUseCase: CreateOrderUseCase
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val getMyOrdersUseCase: GetMyOrdersUseCase,
+    private val cancelOrderUseCase: CancelOrderUseCase
 ) : ViewModel() {
 
     val cartBookIds: List<String> = emptyList()
@@ -300,6 +304,36 @@ class MainViewModel(
             } else {
                 _mainUiState.value = _mainUiState.value.copy(
                     error = "Не удалось оформить заказ"
+                )
+            }
+        }
+    }
+
+    fun loadMyOrders() {
+        viewModelScope.launch {
+            try {
+                val orders = getMyOrdersUseCase.execute()
+
+                _mainUiState.value = _mainUiState.value.copy(
+                    orders = orders
+                )
+            } catch (e: Exception) {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = e.message ?: "Ошибка загрузки заказов"
+                )
+            }
+        }
+    }
+
+    fun cancelOrder(orderId: String) {
+        viewModelScope.launch {
+            val result = cancelOrderUseCase.execute(orderId)
+
+            if (result) {
+                loadMyOrders()
+            } else {
+                _mainUiState.value = _mainUiState.value.copy(
+                    error = "Не удалось отменить заказ"
                 )
             }
         }

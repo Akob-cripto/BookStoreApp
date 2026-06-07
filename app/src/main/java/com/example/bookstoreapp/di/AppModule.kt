@@ -24,7 +24,9 @@ val appModule = module {
             addBookToCartUseCase = get(),
             removeBookFromCartUseCase = get(),
             getCartBookIdsUseCase = get(),
-            createOrderUseCase = get()
+            createOrderUseCase = get(),
+            getMyOrdersUseCase = get(),
+            cancelOrderUseCase = get()
         )
     }
 }

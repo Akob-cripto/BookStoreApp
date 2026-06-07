@@ -35,4 +35,40 @@ class FirebaseOrderStorage(
             false
         }
     }
+
+    override suspend fun getMyOrders(): List<DataOrder> {
+        val uid = auth.currentUser?.uid ?: return emptyList()
+
+        val snapshot = firestore
+            .collection("orders")
+            .whereEqualTo("userId", uid)
+            .get()
+            .await()
+
+        return snapshot.documents.map { doc ->
+            DataOrder(
+                id = doc.id,
+                userId = doc.getString("userId") ?: "",
+                userEmail = doc.getString("userEmail") ?: "",
+                bookIds = doc.get("bookIds") as? List<String> ?: emptyList(),
+                totalPrice = doc.getDouble("totalPrice") ?: 0.0,
+                status = doc.getString("status") ?: "created",
+                createdAtMillis = doc.getTimestamp("createdAt")?.toDate()?.time ?: 0L
+            )
+        }.sortedByDescending { it.createdAtMillis }
+    }
+
+    override suspend fun cancelOrder(orderId: String): Boolean {
+        return try {
+            firestore
+                .collection("orders")
+                .document(orderId)
+                .update("status", "canceled")
+                .await()
+
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

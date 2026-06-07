@@ -1,4 +1,4 @@
-package com.example.domain.usecase
+package com.example.domain.usecase.order
 
 import com.example.domain.models.NewOrderParam
 import com.example.domain.repositories.OrderRepository

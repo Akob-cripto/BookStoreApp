@@ -1,4 +1,4 @@
-package com.example.domain.usecase
+package com.example.domain.usecase.book
 
 import com.example.domain.models.Book
 import com.example.domain.repositories.BookRepository

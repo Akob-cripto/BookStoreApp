@@ -1,4 +1,4 @@
-package com.example.domain.usecase
+package com.example.domain.usecase.cart
 
 import com.example.domain.repositories.CartRepository
 
