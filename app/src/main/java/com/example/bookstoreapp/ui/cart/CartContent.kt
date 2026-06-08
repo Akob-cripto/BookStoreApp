@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookstoreapp.ui.components.Base64Image
 import com.example.domain.models.Book
 
 @Composable
@@ -138,14 +139,12 @@ fun CartBookItem(
                 modifier = Modifier
                     .size(width = 70.dp, height = 95.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF1B3A4B)),
-                contentAlignment = Alignment.Center
+                    .background(Color(0xFF1B3A4B))
             ) {
-                Text(
-                    text = book.title.take(1).uppercase(),
-                    color = Color.White,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
+                Base64Image(
+                    imageBase64 = book.imageUri,
+                    title = book.title,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 

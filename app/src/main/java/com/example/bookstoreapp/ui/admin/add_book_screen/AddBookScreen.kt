@@ -81,7 +81,8 @@ fun AddBookScreen(
             uri?.let {
                 selectedImageUri.value = uri
             }
-        })
+        }
+    )
 
 
     Box(

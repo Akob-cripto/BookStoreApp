@@ -19,29 +19,41 @@ import com.example.bookstoreapp.navigation.BookDetails
 import com.example.bookstoreapp.navigation.Login
 import com.example.bookstoreapp.navigation.Main
 import com.example.bookstoreapp.ui.main_screen.MainViewModel
+import com.google.firebase.auth.FirebaseAuth
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         setContent {
             val navController = rememberNavController()
             val vm: MainViewModel = koinViewModel()
+
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            val startDestination = if (currentUser != null) {
+                Main(
+                    email = currentUser.email ?: "",
+                    userId = currentUser.uid
+                )
+            } else {
+                Login
+            }
+
             NavHost(
                 navController = navController,
-                startDestination = Login
+                startDestination = startDestination
             ) {
                 composable<Login> {
                     LoginScreen(navController = navController)
                 }
 
-                composable<Main> {backStackEntry ->
+                composable<Main> { backStackEntry ->
                     val route = backStackEntry.toRoute<Main>()
+
                     MainScreen(
                         email = route.email,
                         userId = route.userId,
@@ -50,10 +62,12 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                composable<AddBook>() {
+                composable<AddBook> {
                     AddBookScreen(
-                        vm,
-                        onBackClick = { navController.popBackStack() }
+                        vm = vm,
+                        onBackClick = {
+                            navController.popBackStack()
+                        }
                     )
                 }
 

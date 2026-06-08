@@ -42,7 +42,7 @@ fun DrawerBody(
     onCategoryClick: (String?) -> Unit
 ) {
     val categoriesList = remember {
-        listOf("All", "Favorite", "Fantasy", "Drama", "Bestsellers")
+        listOf("All", "Fantasy", "Drama", "Bestsellers")
     }
 
     Column(
