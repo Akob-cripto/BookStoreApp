@@ -51,11 +51,11 @@ fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
 
     val emailState = remember {
-        mutableStateOf("akobeduardovic318@gmail.com")
+        mutableStateOf("")
     }
 
     val passwordState = remember {
-        mutableStateOf("Akob2007)")
+        mutableStateOf("")
     }
 
     val vm: MainViewModel = koinViewModel()
